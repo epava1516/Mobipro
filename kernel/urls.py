@@ -28,6 +28,7 @@ urlpatterns = [
 ]
 
 from shop.auditlog.views import AuditLogListView
+from shop.comment.views import CommentListView
 shop_urls = [
     # Audit-Log
     path('admin/shop/audit-log/', AuditLogListView.as_view(), name='shop_audit_log'),
@@ -39,8 +40,7 @@ shop_urls = [
     path('admin/shop/categories/delete/<int:id>/', AdminMainPageView.as_view(), name='admin_categories_delete'),
 
     # Comments CRUD
-    path('admin/shop/comments/', AdminMainPageView.as_view(), name='admin_comments'),
-    path('admin/shop/comments/add/', AdminMainPageView.as_view(), name='admin_comments_add'),
+    path('admin/shop/comments/', CommentListView.as_view(), name='admin_comments'),
     path('admin/shop/comments/edit/<int:id>/', AdminMainPageView.as_view(), name='admin_comments_edit'),
     path('admin/shop/comments/delete/<int:id>/', AdminMainPageView.as_view(), name='admin_comments_delete'),
 
@@ -60,7 +60,6 @@ shop_urls = [
     path('admin/shop/orders/', AdminMainPageView.as_view(), name='admin_orders'),
     path('admin/shop/orders/add/', AdminMainPageView.as_view(), name='admin_orders_add'),
     path('admin/shop/orders/edit/<int:id>/', AdminMainPageView.as_view(), name='admin_orders_edit'),
-    path('admin/shop/orders/delete/<int:id>/', AdminMainPageView.as_view(), name='admin_orders_delete'),
 
     # Products CRUD
     path('admin/shop/products/', AdminMainPageView.as_view(), name='admin_products'),
@@ -76,9 +75,6 @@ shop_urls = [
 
     # Ratings CRUD
     path('admin/shop/ratings/', AdminMainPageView.as_view(), name='admin_ratings'),
-    path('admin/shop/ratings/add/', AdminMainPageView.as_view(), name='admin_ratings_add'),
-    path('admin/shop/ratings/edit/<int:id>/', AdminMainPageView.as_view(), name='admin_ratings_edit'),
-    path('admin/shop/ratings/delete/<int:id>/', AdminMainPageView.as_view(), name='admin_ratings_delete'),
 
     # Return / Refund CRUD
     path('admin/shop/returns/', AdminMainPageView.as_view(), name='admin_returns'),
