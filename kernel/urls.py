@@ -35,6 +35,7 @@ from shop.gallery.views import GalleryListView
 from shop.order.views import OrderListView
 from shop.product.views import ProductListView
 from shop.promotion.views import PromotionListView
+from shop.rating.views import RatingListView
 
 
 shop_urls = [
@@ -82,7 +83,7 @@ shop_urls = [
     path('admin/shop/promotions/delete/<int:id>/', AdminMainPageView.as_view(), name='shop_promotions_delete'),
 
     # Ratings CRUD
-    path('admin/shop/ratings/', AdminMainPageView.as_view(), name='shop_ratings'),
+    path('admin/shop/ratings/', RatingListView.as_view(), name='shop_ratings'),
 
     # Return / Refund CRUD
     path('admin/shop/returns/', AdminMainPageView.as_view(), name='shop_returns'),
