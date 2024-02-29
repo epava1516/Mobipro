@@ -1,0 +1,96 @@
+{% extends 'admin/shop.html' %}
+
+{% block title %}
+Coupon List | Tienda
+{% endblock %}
+
+{% block shop_title %}
+Lista de Cupones
+{% endblock %}
+
+{% block actions %}
+    <a href="{% url 'shop_promotions_add' %}" class="btn btn-primary">Añadir Cupones</a>
+{% endblock %}
+
+{% block form %}
+<form method="GET" class="form-inline">
+    <!-- Código del cupón -->
+    <div class="form-group mx-sm-3 mb-2">
+        <label for="id_coupon_code" class="mr-2">Código del cupón:</label>
+        <input type="text" name="coupon_code" id="id_coupon_code" class="form-control" placeholder="Código">
+    </div>
+
+    <!-- Descripción -->
+    <div class="form-group mx-sm-3 mb-2">
+        <label for="id_description" class="mr-2">Descripción:</label>
+        <input type="text" name="description" id="id_description" class="form-control" placeholder="Descripción">
+    </div>
+
+    <!-- Fecha de inicio -->
+    <div class="form-group mx-sm-3 mb-2">
+        <label for="id_start_date" class="mr-2">Fecha de inicio:</label>
+        <input type="date" name="start_date" id="id_start_date" class="form-control">
+    </div>
+
+    <!-- Fecha de fin -->
+    <div class="form-group mx-sm-3 mb-2">
+        <label for="id_end_date" class="mr-2">Fecha de fin:</label>
+        <input type="date" name="end_date" id="id_end_date" class="form-control">
+    </div>
+
+    <!-- Botón Filtrar -->
+    <button type="submit" class="btn btn-primary mb-2">Filtrar</button>
+</form>
+{% endblock %}
+
+{% block table %}
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Código</th>
+            <th>Descripción</th>
+            <th>Descuento (%)</th>
+            <th>Fecha de inicio</th>
+            <th>Fecha de fin</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for coupon in coupons %}
+        <tr>
+            <td>{{ coupon.code }}</td>
+            <td>{{ coupon.description }}</td>
+            <td>{{ coupon.discount_percent }}</td>
+            <td>{{ coupon.start_date }}</td>
+            <td>{{ coupon.end_date }}</td>
+            <td>
+                <!-- Botones de acciones aquí -->
+                <!-- Por ejemplo: -->
+                <a href="#" class="btn btn-info btn-sm">Editar</a>
+                <a href="#" class="btn btn-danger btn-sm">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<script>
+    $(document).ready(function () {
+        $('#coupon-table').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true,
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
+            }
+        });
+    });
+</script>
+{% endblock %}

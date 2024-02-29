@@ -1,0 +1,76 @@
+{% extends 'admin/shop.html' %}
+
+{% block title %}
+Category List | Shop
+{% endblock %}
+
+{% block shop_title %}
+Lista de Categorías
+{% endblock %}
+
+{% block actions %}
+    <a href="{% url 'shop_promotions_add' %}" class="btn btn-primary">Añadir Categorías</a>
+{% endblock %}
+
+
+{% block form %}
+<div class="row mb-3">
+    <div class="col-md-6">
+        <div class="input-group">
+            <input type="text" class="form-control" id="search-input" placeholder="Buscar por nombre">
+            <div class="input-group-append">
+                <button class="btn btn-primary" id="search-button">Buscar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block table %}
+<table class="table">
+    <thead>
+        <tr>
+            <th data-sortable="true">Nombre</th>
+            <th>Descripción</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for category in categories %}
+        <tr>
+            <td>{{ category.name }}</td>
+            <td>{{ category.description }}</td>
+            <td>{{ category.is_active }}</td>
+            <td>
+                <a href="{% url 'shop_categories_edit' category.id %}" class="btn btn-sm btn-primary">Editar</a>
+                <a href="{% url 'shop_categories_delete' category.id %}" class="btn btn-sm btn-danger">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        $('#category-table').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": false,  // Deshabilitar la búsqueda de DataTables
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "order": [[ 0, "asc" ]],
+            "columnDefs": [{ "targets": [3], "orderable": false }]
+        });
+
+        // Función para realizar la búsqueda al hacer clic en el botón
+        $('#search-button').click(function() {
+            var searchText = $('#search-input').val();
+            $('#category-table').DataTable().search(searchText).draw();
+        });
+    });
+</script>
+{% endblock %}

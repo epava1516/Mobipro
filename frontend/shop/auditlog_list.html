@@ -1,102 +1,94 @@
-{% extends 'admin/base.html' %}
+{% extends 'admin/shop.html' %}
 
 {% block title %}
 Audit Log | Shop
 {% endblock %}
 
-{% block content %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Audit Logs</h3>
-                </div>
-                <div class="card-body">
-                    <form method="GET" class="form-inline">
-                        <!-- Modelo -->
-                        <div class="form-group mx-sm-3 mb-2">
-                            <label for="id_model_name" class="mr-2">Modelo:</label>
-                            <select name="model_name" id="id_model_name" class="form-control">
-                                <option value="" selected>Todos</option>
-                                <!-- Opciones del modelo aquí -->
-                            </select>
-                        </div>
+{% block shop_title %}
+Audit Logs
+{% endblock %}
 
-                        <!-- Acción -->
-                        <div class="form-group mx-sm-3 mb-2">
-                            <label for="id_action" class="mr-2">Acción:</label>
-                            <select name="action" id="id_action" class="form-control">
-                                <option value="" selected>Todas</option>
-                                <!-- Opciones de acción aquí -->
-                            </select>
-                        </div>
-
-                        <!-- Usuario -->
-                        <div class="form-group mx-sm-3 mb-2">
-                            <label for="id_user" class="mr-2">Usuario:</label>
-                            <input type="text" name="user" id="id_user" class="form-control" placeholder="Usuario">
-                        </div>
-
-                        <!-- Fecha de inicio -->
-                        <div class="form-group mx-sm-3 mb-2">
-                            <label for="id_start_date" class="mr-2">Fecha de inicio:</label>
-                            <input type="date" name="start_date" id="id_start_date" class="form-control">
-                        </div>
-
-                        <!-- Fecha de fin -->
-                        <div class="form-group mx-sm-3 mb-2">
-                            <label for="id_end_date" class="mr-2">Fecha de fin:</label>
-                            <input type="date" name="end_date" id="id_end_date" class="form-control">
-                        </div>
-
-                        <!-- Ordenar por -->
-                        <div class="form-group mx-sm-3 mb-2">
-                            <label for="id_order_by" class="mr-2">Ordenar por:</label>
-                            <select name="order_by" id="id_order_by" class="form-control">
-                                <option value="model_name">Modelo (A-Z)</option>
-                                <option value="-model_name">Modelo (Z-A)</option>
-                                <option value="action">Acción (A-Z)</option>
-                                <option value="-action">Acción (Z-A)</option>
-                                <option value="user">Usuario (A-Z)</option>
-                                <option value="-user">Usuario (Z-A)</option>
-                                <option value="timestamp">Fecha (Más reciente)</option>
-                                <option value="-timestamp">Fecha (Menos reciente)</option>
-                            </select>
-                        </div>
-
-                        <!-- Botón Filtrar -->
-                        <button type="submit" class="btn btn-primary mb-2">Filtrar</button>
-                    </form>
-
-
-                    <table class="table table-bordered table-hover">
-                        <thead>
-                            <tr>
-                                <th>Modelo</th>
-                                <th>Acción</th>
-                                <th>Usuario</th>
-                                <th>Campos Cambiados</th>
-                                <th>Fecha y Hora</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for log in audit_logs %}
-                            <tr>
-                                <td>{{ log.model_name }}</td>
-                                <td>{{ log.action }}</td>
-                                <td>{{ log.user }}</td>
-                                <td>{{ log.changed_fields }}</td>
-                                <td>{{ log.timestamp }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+{% block form %}
+<form method="GET" class="form-inline">
+    <!-- Modelo -->
+    <div class="form-group mx-sm-3 mb-2">
+        <label for="id_model_name" class="mr-2">Modelo:</label>
+        <select name="model_name" id="id_model_name" class="form-control">
+            <option value="" selected>Todos</option>
+            <!-- Opciones del modelo aquí -->
+        </select>
     </div>
-</div>
+
+    <!-- Acción -->
+    <div class="form-group mx-sm-3 mb-2">
+        <label for="id_action" class="mr-2">Acción:</label>
+        <select name="action" id="id_action" class="form-control">
+            <option value="" selected>Todas</option>
+            <!-- Opciones de acción aquí -->
+        </select>
+    </div>
+
+    <!-- Usuario -->
+    <div class="form-group mx-sm-3 mb-2">
+        <label for="id_user" class="mr-2">Usuario:</label>
+        <input type="text" name="user" id="id_user" class="form-control" placeholder="Usuario">
+    </div>
+
+    <!-- Fecha de inicio -->
+    <div class="form-group mx-sm-3 mb-2">
+        <label for="id_start_date" class="mr-2">Fecha de inicio:</label>
+        <input type="date" name="start_date" id="id_start_date" class="form-control">
+    </div>
+
+    <!-- Fecha de fin -->
+    <div class="form-group mx-sm-3 mb-2">
+        <label for="id_end_date" class="mr-2">Fecha de fin:</label>
+        <input type="date" name="end_date" id="id_end_date" class="form-control">
+    </div>
+
+    <!-- Ordenar por -->
+    <div class="form-group mx-sm-3 mb-2">
+        <label for="id_order_by" class="mr-2">Ordenar por:</label>
+        <select name="order_by" id="id_order_by" class="form-control">
+            <option value="model_name">Modelo (A-Z)</option>
+            <option value="-model_name">Modelo (Z-A)</option>
+            <option value="action">Acción (A-Z)</option>
+            <option value="-action">Acción (Z-A)</option>
+            <option value="user">Usuario (A-Z)</option>
+            <option value="-user">Usuario (Z-A)</option>
+            <option value="timestamp">Fecha (Más reciente)</option>
+            <option value="-timestamp">Fecha (Menos reciente)</option>
+        </select>
+    </div>
+
+    <!-- Botón Filtrar -->
+    <button type="submit" class="btn btn-primary mb-2">Filtrar</button>
+</form>
+{% endblock %}
+
+{% block table %}
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Modelo</th>
+            <th>Acción</th>
+            <th>Usuario</th>
+            <th>Campos Cambiados</th>
+            <th>Fecha y Hora</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for log in audit_logs %}
+        <tr>
+            <td>{{ log.model_name }}</td>
+            <td>{{ log.action }}</td>
+            <td>{{ log.user }}</td>
+            <td>{{ log.changed_fields }}</td>
+            <td>{{ log.timestamp }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}
 
 {% block scripts %}

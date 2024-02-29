@@ -1,0 +1,120 @@
+{% extends 'admin/shop.html' %}
+
+{% block title %}
+Lista de Productos | Shop
+{% endblock %}
+
+{% block shop_title %}
+Lista de Productos
+{% endblock %}
+
+{% block actions %}
+    <a href="{% url 'shop_products_add' %}" class="btn btn-primary">Añadir Productos</a>
+{% endblock %}
+
+
+{% block form %}
+<form method="GET" class="form-inline">
+    <div class="form-group mx-sm-3 mb-2">
+        <label for="name" class="mr-2">Nombre:</label>
+        <input type="text" class="form-control" id="name" name="name">
+    </div>
+
+    <div class="form-group mx-sm-3 mb-2">
+        <label for="description" class="mr-2">Descripción:</label>
+        <input type="text" class="form-control" id="description" name="description">
+    </div>
+
+    <div class="form-group mx-sm-3 mb-2">
+        <label for="min_price" class="mr-2">Precio Mínimo:</label>
+        <input type="number" class="form-control" id="min_price" name="min_price">
+    </div>
+
+    <div class="form-group mx-sm-3 mb-2">
+        <label for="max_price" class="mr-2">Precio Máximo:</label>
+        <input type="number" class="form-control" id="max_price" name="max_price">
+    </div>
+
+    <div class="form-group mx-sm-3 mb-2">
+        <label for="min_stock" class="mr-2">Existencias Mínimas:</label>
+        <input type="number" class="form-control" id="min_stock" name="min_stock">
+    </div>
+
+    <div class="form-group mx-sm-3 mb-2">
+        <label for="max_stock" class="mr-2">Existencias Máximas:</label>
+        <input type="number" class="form-control" id="max_stock" name="max_stock">
+    </div>
+
+    <div class="form-group mx-sm-3 mb-2">
+        <label for="category" class="mr-2">Categoría:</label>
+        <select class="form-control" id="category" name="category">
+            <option value="">Todas</option>
+            <!-- Agregar opciones de categorías aquí -->
+        </select>
+    </div>
+
+    <div class="form-group mx-sm-3 mb-2">
+        <label for="tag" class="mr-2">Etiqueta:</label>
+        <select class="form-control" id="tag" name="tag">
+            <option value="">Todas</option>
+            <!-- Agregar opciones de etiquetas aquí -->
+        </select>
+    </div>
+
+    <div class="form-group mx-sm-3 mb-2">
+        <label for="start_date" class="mr-2">Fecha de Creación:</label>
+        <input type="date" class="form-control" id="start_date" name="start_date">
+    </div>
+
+    <div class="form-group mx-sm-3 mb-2">
+        <label for="end_date" class="mr-2">Fecha de Fin:</label>
+        <input type="date" class="form-control" id="end_date" name="end_date">
+    </div>
+
+    <button type="submit" class="btn btn-primary mb-2">Filtrar</button>
+</form>
+{% endblock %}
+
+{% block table %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Existencias</th>
+            <th>Categoría</th>
+            <th>Etiquetas</th>
+            <th>Fecha de Creación</th>
+            <th>Última Actualización</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in products %}
+        <tr>
+            <td>{{ product.name }}</td>
+            <td>{{ product.description }}</td>
+            <td>{{ product.price }}</td>
+            <td>{{ product.stock }}</td>
+            <td>{{ product.category }}</td>
+            <td>
+                {% for tag in product.tags.all %}
+                    {{ tag.name }}
+                    {% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </td>
+            <td>{{ product.created_at }}</td>
+            <td>{{ product.updated_at }}</td>
+            <td>
+                <!-- Aquí puedes agregar enlaces para editar o eliminar el producto -->
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block scripts %}
+<!-- Aquí puedes agregar cualquier script necesario -->
+{% endblock %}

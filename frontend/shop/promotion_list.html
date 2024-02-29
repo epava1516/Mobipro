@@ -1,0 +1,91 @@
+{% extends 'admin/shop.html' %}
+
+{% block title %}
+Promotion List | Shop
+{% endblock %}
+
+{% block shop_title %}
+Lista de Promociones
+{% endblock %}
+
+{% block actions %}
+    <a href="{% url 'shop_promotions_add' %}" class="btn btn-primary">Añadir Promoción</a>
+{% endblock %}
+
+{% block form %}
+<form method="GET">
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label for="id_name">Nombre:</label>
+            <input type="text" class="form-control" id="id_name" name="name">
+        </div>
+        <div class="form-group col-md-4">
+            <label for="id_description">Descripción:</label>
+            <input type="text" class="form-control" id="id_description" name="description">
+        </div>
+        <div class="form-group col-md-4">
+            <label for="id_discount_percent">Porcentaje de descuento:</label>
+            <input type="number" class="form-control" id="id_discount_percent" name="discount_percent">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label for="id_start_date">Fecha de inicio:</label>
+            <input type="date" class="form-control" id="id_start_date" name="start_date">
+        </div>
+        <div class="form-group col-md-4">
+            <label for="id_end_date">Fecha de fin:</label>
+            <input type="date" class="form-control" id="id_end_date" name="end_date">
+        </div>
+        <div class="form-group col-md-4">
+            <label for="id_order_by">Ordenar por:</label>
+            <select class="form-control" id="id_order_by" name="order_by">
+                <option value="name">Nombre (A-Z)</option>
+                <option value="-name">Nombre (Z-A)</option>
+                <option value="start_date">Fecha de inicio (más reciente)</option>
+                <option value="-start_date">Fecha de inicio (menos reciente)</option>
+                <option value="end_date">Fecha de fin (más reciente)</option>
+                <option value="-end_date">Fecha de fin (menos reciente)</option>
+            </select>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Filtrar</button>
+</form>
+{% endblock %}
+
+{% block table %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Porcentaje de Descuento</th>
+            <th>Fecha de Inicio</th>
+            <th>Fecha de Fin</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for promotion in promotions %}
+        <tr>
+            <td>{{ promotion.name }}</td>
+            <td>{{ promotion.description }}</td>
+            <td>{{ promotion.discount_percent }}</td>
+            <td>{{ promotion.start_date }}</td>
+            <td>{{ promotion.end_date }}</td>
+            <td>
+                <a href="{% url 'edit_promotion' promotion.id %}" class="btn btn-primary">Editar</a>
+                <a href="{% url 'delete_promotion' promotion.id %}" class="btn btn-danger">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<script>
+    // Agrega aquí cualquier script adicional necesario
+</script>
+{% endblock %}

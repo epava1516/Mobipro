@@ -1,0 +1,63 @@
+{% extends 'admin/shop.html' %}
+
+{% block title %}
+Galería List | Shop
+{% endblock %}
+
+{% block shop_title %}
+Lista de Galerías
+{% endblock %}
+
+{% block form %}
+<form method="GET" class="form-inline">
+    <!-- Usuario -->
+    <div class="form-group mx-sm-3 mb-2">
+        <label for="id_user" class="mr-2">Usuario:</label>
+        <input type="text" name="user" id="id_user" class="form-control" placeholder="Usuario">
+    </div>
+
+    <!-- Estado -->
+    <div class="form-group mx-sm-3 mb-2">
+        <label for="id_status" class="mr-2">Estado:</label>
+        <select name="status" id="id_status" class="form-control">
+            <option value="active" selected>Activa</option>
+            <option value="inactive">Inactiva</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary mb-2">Filtrar</button>
+</form>
+{% endblock %}
+
+{% block table %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Usuario</th>
+            <th>Fecha de Creación</th>
+            <th>Última Edición</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for gallery in galleries %}
+        <tr>
+            <td>{{ gallery.user }}</td>
+            <td>{{ gallery.created_at }}</td>
+            <td>{{ gallery.updated_at }}</td>
+            <td>
+                <a href="{% url 'edit_gallery' gallery.id %}" class="btn btn-primary">Editar</a>
+                <a href="{% url 'delete_gallery' gallery.id %}" class="btn btn-danger">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<script>
+    // Puedes agregar scripts adicionales aquí si es necesario
+</script>
+{% endblock %}

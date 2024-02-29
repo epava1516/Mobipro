@@ -1,99 +1,94 @@
-{% extends 'admin/base.html' %}
+{% extends 'admin/shop.html' %}
 
 {% block title %}
-Audit Log | Shop
+Comment List | Shop
 {% endblock %}
 
-{% block content %}
-<div class="container-fluid">
+{% block shop_title %}
+Lista de Comentarios
+{% endblock %}
+
+{% block form %}
+<form method="GET" class="form-inline">
     <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Comment List</h3>
-                </div>
-                <div class="card-body">
-                    <form method="GET">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="id_user">Usuario:</label>
-                                    <input type="text" class="form-control" id="id_user" name="user">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="id_product">Producto:</label>
-                                    <input type="text" class="form-control" id="id_product" name="product">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="id_start_date">Fecha inicial:</label>
-                                    <input type="date" class="form-control" id="id_start_date" name="start_date">
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="id_end_date">Fecha final:</label>
-                                    <input type="date" class="form-control" id="id_end_date" name="end_date">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="id_order_by">Ordenar por:</label>
-                            <select class="form-control" id="id_order_by" name="order_by">
-                                <option value="created_at">Fecha (más reciente)</option>
-                                <option value="-created_at">Fecha (menos reciente)</option>
-                                <option value="user__username">Usuario (A-Z)</option>
-                                <option value="-user__username">Usuario (Z-A)</option>
-                                <option value="product__name">Producto (A-Z)</option>
-                                <option value="-product__name">Producto (Z-A)</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Filtrar</button>
-                    </form>
+        <!-- Usuario -->
+        <div class="form-group col-md-3">
+            <label for="id_user">Usuario:</label>
+            <input type="text" class="form-control" id="id_user" name="user">
+        </div>
 
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Usuario</th>
-                                <th>Producto</th>
-                                <th>Texto</th>
-                                <th>Creado</th>
-                                <th>Actualizado</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for comment in comments %}
-                            <tr>
-                                <td>{{ comment.user }}</td>
-                                <td>{{ comment.product }}</td>
-                                <td>{{ comment.text }}</td>
-                                <td>{{ comment.created_at }}</td>
-                                <td>{{ comment.updated_at }}</td>
-                                <td>
-                                    <a href="{% url 'edit_comment' comment.id %}" class="btn btn-primary">Editar</a>
-                                    <a href="{% url 'delete_comment' comment.id %}" class="btn btn-danger">Eliminar</a>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+        <!-- Producto -->
+        <div class="form-group col-md-3">
+            <label for="id_product">Producto:</label>
+            <input type="text" class="form-control" id="id_product" name="product">
+        </div>
 
-                </div>
-            </div>
+        <!-- Fecha inicial -->
+        <div class="form-group col-md-3">
+            <label for="id_start_date">Fecha inicial:</label>
+            <input type="date" class="form-control" id="id_start_date" name="start_date">
+        </div>
+
+        <!-- Fecha final -->
+        <div class="form-group col-md-3">
+            <label for="id_end_date">Fecha final:</label>
+            <input type="date" class="form-control" id="id_end_date" name="end_date">
         </div>
     </div>
-</div>
+
+    <!-- Ordenar por -->
+    <div class="form-group">
+        <label for="id_order_by">Ordenar por:</label>
+        <select class="form-control" id="id_order_by" name="order_by">
+            <option value="created_at">Fecha (más reciente)</option>
+            <option value="-created_at">Fecha (menos reciente)</option>
+            <option value="user__username">Usuario (A-Z)</option>
+            <option value="-user__username">Usuario (Z-A)</option>
+            <option value="product__name">Producto (A-Z)</option>
+            <option value="-product__name">Producto (Z-A)</option>
+        </select>
+    </div>
+
+    <!-- Botón Filtrar -->
+    <button type="submit" class="btn btn-primary">Filtrar</button>
+</form>
+{% endblock %}
+
+{% block table %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Usuario</th>
+            <th>Producto</th>
+            <th>Texto</th>
+            <th>Creado</th>
+            <th>Actualizado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for comment in comments %}
+        <tr>
+            <td>{{ comment.user }}</td>
+            <td>{{ comment.product }}</td>
+            <td>{{ comment.text }}</td>
+            <td>{{ comment.created_at }}</td>
+            <td>{{ comment.updated_at }}</td>
+            <td>
+                <a href="{% url 'edit_comment' comment.id %}" class="btn btn-primary">Editar</a>
+                <a href="{% url 'delete_comment' comment.id %}" class="btn btn-danger">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}
 
 {% block scripts %}
 {{ block.super }}
 <script>
     $(document).ready(function () {
-        $('#audit-log-table').DataTable({
+        $('#comment-table').DataTable({
             "paging": true,
             "lengthChange": true,
             "searching": true,
