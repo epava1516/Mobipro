@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% include "base/head.html" %}
+    <title>{% block title %}{% endblock %} | Mobipro's Admin Page</title>
+</head>
+
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+        <!-- Navbar -->
+        {% include "base/navbar.html" %}
+        <!-- /.navbar -->
+
+
+        <!-- Main Sidebar Container -->
+        <!-- /.sidebar -->
+        {% include "base/sidebar.html" %}
+        <!-- /.sidebar-custom -->
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            {% include "base/header.html" %}
+            <!-- /.content-header -->
+
+            <!-- Main content -->
+            <section class="content">
+                <div class="container-fluid">
+                    {% block content %}
+                    <!-- Add your main page content here -->
+                    {% endblock %}
+                </div><!-- /.container-fluid -->
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+
+        <!-- Main Footer -->
+        {% include "base/footer.html" %}
+    </div>
+    <!-- ./wrapper -->
+
+    <!-- AdminLTE JS -->
+    {% block scripts %}
+    {% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+</body>
+
+</html>
