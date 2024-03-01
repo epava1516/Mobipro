@@ -1,31 +1,30 @@
-from django.views.generic import TemplateView
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
+from django.urls import reverse_lazy
 from shop.comment.models import Comment
 
-class CommentListView(TemplateView):
-    template_name = 'shop/comment_list.html'
+class CommentListView(ListView):
+    model = Comment
+    template_name = 'shop/comment/list.html'
+    context_object_name = 'comments'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+class CommentCreateView(CreateView):
+    model = Comment
+    template_name = 'shop/comment/form.html'
+    fields = '__all__'
+    success_url = reverse_lazy('shop_comments')
 
-        # Obtener todos los comentarios
-        comments = Comment.objects.all()
+class CommentDetailView(DetailView):
+    model = Comment
+    template_name = 'shop/comment/detail.html'
+    context_object_name = 'comment'
 
-        # Aplicar filtros si se proporcionan en la solicitud GET
-        user = self.request.GET.get('user')
-        if user:
-            comments = comments.filter(user__username__icontains=user)
+class CommentUpdateView(UpdateView):
+    model = Comment
+    template_name = 'shop/comment/form.html'
+    fields = '__all__'
+    success_url = reverse_lazy('shop_comments')
 
-        product = self.request.GET.get('product')
-        if product:
-            comments = comments.filter(product__name__icontains=product)
-
-        start_date = self.request.GET.get('start_date')
-        end_date = self.request.GET.get('end_date')
-        if start_date and end_date:
-            comments = comments.filter(created_at__range=(start_date, end_date))
-
-        order_by = self.request.GET.get('order_by', '-created_at')
-        comments = comments.order_by(order_by)
-
-        context['comments'] = comments
-        return context
+class CommentDeleteView(DeleteView):
+    model = Comment
+    template_name = 'shop/comment/confirm_delete.html'
+    success_url = reverse_lazy('shop_comments')

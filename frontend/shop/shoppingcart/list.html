@@ -1,0 +1,46 @@
+{% extends 'admin/shop/list.html' %}
+
+{% block title %}
+Lista de Carritos de Compras | Shop
+{% endblock %}
+
+{% block shop_title %}
+Lista de Carritos de Compras
+{% endblock %}
+
+{% block form %}
+{% endblock %}
+
+{% block table %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Usuario</th>
+            <th>Creado</th>
+            <th>Actualizado</th>
+            <th>Activo</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for cart in shopping_carts %}
+        <tr>
+            <td>{{ cart.user.username }}</td>
+            <td>{{ cart.created_at }}</td>
+            <td>{{ cart.updated_at }}</td>
+            <td>{{ cart.is_active }}</td>
+            <td>
+                <!-- Add action buttons here -->
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<script>
+    // Add any custom scripts here
+</script>
+{% endblock %}

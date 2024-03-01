@@ -1,0 +1,52 @@
+{% extends 'admin/shop/list.html' %}
+
+{% block title %}
+Lista de Envíos | Shop
+{% endblock %}
+
+{% block shop_title %}
+Lista de Envíos
+{% endblock %}
+
+{% block form %}
+{% endblock %}
+
+{% block table %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Número de Orden</th>
+            <th>Transportista</th>
+            <th>Número de Seguimiento</th>
+            <th>Fecha de Envío</th>
+            <th>Fecha de Entrega Estimada</th>
+            <th>Estado</th>
+            <th>Dirección</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for shipping in shippings %}
+        <tr>
+            <td>{{ shipping.order.order_number }}</td>
+            <td>{{ shipping.carrier }}</td>
+            <td>{{ shipping.tracking_number }}</td>
+            <td>{{ shipping.shipping_date }}</td>
+            <td>{{ shipping.estimated_delivery_date }}</td>
+            <td>{{ shipping.status }}</td>
+            <td>{{ shipping.address }}</td>
+            <td>
+                <!-- Add action buttons here -->
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<script>
+    // Add any custom scripts here
+</script>
+{% endblock %}

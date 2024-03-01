@@ -1,0 +1,42 @@
+{% extends 'admin/shop/list.html' %}
+
+{% block title %}
+Actividad de Usuario | Shop
+{% endblock %}
+
+{% block shop_title %}
+Actividad de Usuario
+{% endblock %}
+
+{% block form %}
+{% endblock %}
+
+{% block table %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Usuario</th>
+            <th>Tipo de Actividad</th>
+            <th>Descripción</th>
+            <th>Fecha y Hora</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for activity in user_activities %}
+        <tr>
+            <td>{{ activity.user.username }}</td>
+            <td>{{ activity.activity_type }}</td>
+            <td>{{ activity.description }}</td>
+            <td>{{ activity.timestamp }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<script>
+    // Add any custom scripts here
+</script>
+{% endblock %}

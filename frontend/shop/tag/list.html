@@ -1,0 +1,42 @@
+{% extends 'admin/shop/list.html' %}
+
+{% block title %}
+Lista de Etiquetas | Shop
+{% endblock %}
+
+{% block shop_title %}
+Lista de Etiquetas
+{% endblock %}
+
+{% block form %}
+{% endblock %}
+
+{% block table %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for tag in tags %}
+        <tr>
+            <td>{{ tag.name }}</td>
+            <td>{{ tag.description }}</td>
+            <td>
+                <!-- Add action buttons here -->
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<script>
+    // Add any custom scripts here
+</script>
+{% endblock %}

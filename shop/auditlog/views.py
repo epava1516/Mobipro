@@ -3,7 +3,7 @@ from shop.auditlog.forms import AuditLogFilterForm
 from shop.auditlog.models import AuditLog
 
 class AuditLogListView(TemplateView):
-    template_name = 'shop/auditlog_list.html'
+    template_name = 'shop/auditlog/list.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

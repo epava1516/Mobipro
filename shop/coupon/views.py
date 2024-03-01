@@ -1,22 +1,30 @@
-from django.views.generic import TemplateView
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
+from django.urls import reverse_lazy
 from shop.coupon.models import Coupon
 
-class CouponListView(TemplateView):
-    template_name = 'shop/coupon_list.html'
+class CouponListView(ListView):
+    model = Coupon
+    template_name = 'shop/coupon/list.html'
+    context_object_name = 'coupons'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        coupons = Coupon.objects.all()
+class CouponCreateView(CreateView):
+    model = Coupon
+    template_name = 'shop/coupon/form.html'
+    fields = '__all__'
+    success_url = reverse_lazy('shop_coupons')
 
-        # Filtrar por código si se proporciona en la consulta
-        code = self.request.GET.get('code')
-        if code:
-            coupons = coupons.filter(code__icontains=code)
+class CouponDetailView(DetailView):
+    model = Coupon
+    template_name = 'shop/coupon/detail.html'
+    context_object_name = 'coupon'
 
-        # Aplicar paginación
-        from django.core.paginator import Paginator
-        paginator = Paginator(coupons, 10)  # Mostrar 10 cupones por página
-        page_number = self.request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-        context['coupons'] = page_obj
-        return context
+class CouponUpdateView(UpdateView):
+    model = Coupon
+    template_name = 'shop/coupon/form.html'
+    fields = '__all__'
+    success_url = reverse_lazy('shop_coupons')
+
+class CouponDeleteView(DeleteView):
+    model = Coupon
+    template_name = 'shop/coupon/confirm_delete.html'
+    success_url = reverse_lazy('shop_coupons')

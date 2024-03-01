@@ -1,34 +1,30 @@
-from django.views.generic import TemplateView
-from django.utils.timezone import make_aware
-from datetime import datetime
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
+from django.urls import reverse_lazy
 from shop.rating.models import Rating
 
-class RatingListView(TemplateView):
-    template_name = 'shop/rating_list.html'
+class RatingListView(ListView):
+    model = Rating
+    template_name = 'shop/rating/list.html'
+    context_object_name = 'ratings'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # Obtener parámetros de filtro
-        user = self.request.GET.get('user')
-        product = self.request.GET.get('product')
-        value = self.request.GET.get('value')
-        start_date = self.request.GET.get('start_date')
-        end_date = self.request.GET.get('end_date')
-        
-        # Filtrar clasificaciones
-        ratings = Rating.objects.all()
-        if user:
-            ratings = ratings.filter(user__username__icontains=user)
-        if product:
-            ratings = ratings.filter(product__name__icontains=product)
-        if value:
-            ratings = ratings.filter(value=value)
-        if start_date:
-            start_date = make_aware(datetime.strptime(start_date, '%Y-%m-%d'))
-            ratings = ratings.filter(created_at__gte=start_date)
-        if end_date:
-            end_date = make_aware(datetime.strptime(end_date, '%Y-%m-%d'))
-            ratings = ratings.filter(created_at__lte=end_date)
-        
-        context['ratings'] = ratings
-        return context
+class RatingCreateView(CreateView):
+    model = Rating
+    template_name = 'shop/rating/form.html'
+    fields = '__all__'
+    success_url = reverse_lazy('shop_ratings')
+
+class RatingDetailView(DetailView):
+    model = Rating
+    template_name = 'shop/rating/detail.html'
+    context_object_name = 'rating'
+
+class RatingUpdateView(UpdateView):
+    model = Rating
+    template_name = 'shop/rating/form.html'
+    fields = '__all__'
+    success_url = reverse_lazy('shop_ratings')
+
+class RatingDeleteView(DeleteView):
+    model = Rating
+    template_name = 'shop/rating/confirm_delet-e.html'
+    success_url = reverse_lazy('shop_ratings')
