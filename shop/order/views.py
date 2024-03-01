@@ -7,6 +7,14 @@ class OrderListView(ListView):
     template_name = 'shop/order/list.html'
     context_object_name = 'orders'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # context['show_add_button'] = True # Muestra el botón de agregar
+        # context['add_url_variable'] = reverse_lazy('shop_coupons_add') # URL de la vista de agregar
+        context['shop_title'] = 'Pedidos'
+        context['title'] = 'Order'
+        return context
+
 class OrderCreateView(CreateView):
     model = Order
     template_name = 'shop/order/form.html'

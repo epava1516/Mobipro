@@ -7,6 +7,14 @@ class RatingListView(ListView):
     template_name = 'shop/rating/list.html'
     context_object_name = 'ratings'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # context['show_add_button'] = True # Muestra el botón de agregar
+        # context['add_url_variable'] = reverse_lazy('shop_coupons_add') # URL de la vista de agregar
+        context['shop_title'] = 'Calificaciones'
+        context['title'] = 'Rating'
+        return context
+
 class RatingCreateView(CreateView):
     model = Rating
     template_name = 'shop/rating/form.html'

@@ -7,6 +7,14 @@ class GalleryListView(ListView):
     template_name = 'shop/gallery/list.html'
     context_object_name = 'gallery_items'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # context['show_add_button'] = True # Muestra el botón de agregar
+        # context['add_url_variable'] = reverse_lazy('shop_coupons_add') # URL de la vista de agregar
+        context['shop_title'] = 'Galerias'
+        context['title'] = 'Gallery'
+        return context
+
 class GalleryCreateView(CreateView):
     model = Gallery
     template_name = 'shop/gallery/form.html'

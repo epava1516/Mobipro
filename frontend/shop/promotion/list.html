@@ -1,17 +1,5 @@
 {% extends 'admin/shop/list.html' %}
 
-{% block title %}
-Promotion List | Shop
-{% endblock %}
-
-{% block shop_title %}
-Lista de Promociones
-{% endblock %}
-
-{% block actions %}
-    <a href="{% url 'shop_promotions_add' %}" class="btn btn-primary">Añadir Promoción</a>
-{% endblock %}
-
 {% block form %}
 <form method="GET">
     <div class="form-row">

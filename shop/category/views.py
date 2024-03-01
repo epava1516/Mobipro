@@ -7,6 +7,14 @@ class CategoryListView(ListView):
     template_name = 'shop/category/list.html'
     context_object_name = 'categories'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['show_add_button'] = True # Muestra el botón de agregar
+        context['add_url_variable'] = reverse_lazy('shop_categories_add') # URL de la vista de agregar
+        context['shop_title'] = 'Categorías'
+        context['title'] = 'Category'
+        return context
+
 class CategoryCreateView(CreateView):
     model = Category
     template_name = 'shop/category/form.html'

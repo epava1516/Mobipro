@@ -1,18 +1,5 @@
 {% extends 'admin/shop/list.html' %}
 
-{% block title %}
-Lista de Productos | Shop
-{% endblock %}
-
-{% block shop_title %}
-Lista de Productos
-{% endblock %}
-
-{% block actions %}
-    <a href="{% url 'shop_products_add' %}" class="btn btn-primary">Añadir Productos</a>
-{% endblock %}
-
-
 {% block form %}
 <form method="GET" class="form-inline">
     <div class="form-group mx-sm-3 mb-2">

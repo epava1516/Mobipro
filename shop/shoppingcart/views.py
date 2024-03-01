@@ -7,6 +7,14 @@ class ShoppingCartListView(ListView):
     template_name = 'shop/shoppingcart/list.html'
     context_object_name = 'shopping_carts'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # context['show_add_button'] = True # Muestra el botón de agregar
+        # context['add_url_variable'] = reverse_lazy('shop_coupons_add') # URL de la vista de agregar
+        context['shop_title'] = 'Carritos de compra'
+        context['title'] = 'Shopping Cart'
+        return context
+
 class ShoppingCartCreateView(CreateView):
     model = ShoppingCart
     template_name = 'shop/shoppingcart/form.html'

@@ -1,17 +1,5 @@
 {% extends 'admin/shop/list.html' %}
 
-{% block title %}
-Coupon List | Tienda
-{% endblock %}
-
-{% block shop_title %}
-Lista de Cupones
-{% endblock %}
-
-{% block actions %}
-    <a href="{% url 'shop_promotions_add' %}" class="btn btn-primary">Añadir Cupones</a>
-{% endblock %}
-
 {% block form %}
 <form method="GET" class="form-inline">
     <!-- Código del cupón -->

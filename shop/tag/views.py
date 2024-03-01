@@ -7,6 +7,14 @@ class TagListView(ListView):
     template_name = 'shop/tag/list.html'
     context_object_name = 'tags'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['show_add_button'] = True # Muestra el botón de agregar
+        context['add_url_variable'] = reverse_lazy('shop_tags_add') # URL de la vista de agregar
+        context['shop_title'] = 'Etiquetas'
+        context['title'] = 'Tag'
+        return context
+
 class TagCreateView(CreateView):
     model = Tag
     template_name = 'shop/tag/form.html'
