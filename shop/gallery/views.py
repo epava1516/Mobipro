@@ -6,14 +6,27 @@ class GalleryListView(ListView):
     model = Gallery
     template_name = 'shop/gallery/list.html'
     context_object_name = 'gallery_items'
+    paginate_by = 10  # Opcional: para paginar los resultados
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        # Aplicar filtros según los parámetros recibidos en la solicitud GET
+        user = self.request.GET.get('user')
+        status = self.request.GET.get('status')
+        if user:
+            queryset = queryset.filter(user__icontains=user)
+        if status == 'active':
+            queryset = queryset.filter(is_active=True)
+        elif status == 'inactive':
+            queryset = queryset.filter(is_active=False)
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # context['show_add_button'] = True # Muestra el botón de agregar
-        # context['add_url_variable'] = reverse_lazy('shop_coupons_add') # URL de la vista de agregar
         context['shop_title'] = 'Galerias'
         context['title'] = 'Gallery'
         return context
+
 
 class GalleryCreateView(CreateView):
     model = Gallery

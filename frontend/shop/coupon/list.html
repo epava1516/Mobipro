@@ -1,34 +1,53 @@
 {% extends 'admin/shop/list.html' %}
 
 {% block form %}
-<form method="GET" class="form-inline">
-    <!-- Código del cupón -->
-    <div class="form-group mx-sm-3 mb-2">
-        <label for="id_coupon_code" class="mr-2">Código del cupón:</label>
-        <input type="text" name="coupon_code" id="id_coupon_code" class="form-control" placeholder="Código">
-    </div>
+<div class="table-responsive">
+    <table class="table table-borderless">
+        <tbody>
+            <tr>
+                <td>
+                    <div class="form-group mx-sm-3 mb-2">
+                        <label for="id_search">Buscar:</label>
+                        <input type="text" name="search" id="id_search" class="form-control"
+                            placeholder="Código o Descripción">
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group mx-sm-3 mb-2">
+                        <label for="id_discount_percent">Descuento (%):</label>
+                        <input type="number" name="discount_percent" id="id_discount_percent" class="form-control"
+                            placeholder="%">
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group mx-sm-3 mb-2">
+                        <label for="id_start_date">Fecha de inicio:</label>
+                        <input type="date" name="start_date" id="id_start_date" class="form-control"
+                            placeholder="Fecha de inicio">
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group mx-sm-3 mb-2">
+                        <label for="id_end_date">Fecha de fin:</label>
+                        <input type="date" name="end_date" id="id_end_date" class="form-control"
+                            placeholder="Fecha de fin">
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group mx-sm-3 mb-2">
+                        <label for="id_is_active">Estado:</label>
+                        <select name="is_active" id="id_is_active" class="form-control">
+                            <option value="" selected>Todos</option>
+                            <option value="1">Activo</option>
+                            <option value="0">Inactivo</option>
+                        </select>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
-    <!-- Descripción -->
-    <div class="form-group mx-sm-3 mb-2">
-        <label for="id_description" class="mr-2">Descripción:</label>
-        <input type="text" name="description" id="id_description" class="form-control" placeholder="Descripción">
-    </div>
-
-    <!-- Fecha de inicio -->
-    <div class="form-group mx-sm-3 mb-2">
-        <label for="id_start_date" class="mr-2">Fecha de inicio:</label>
-        <input type="date" name="start_date" id="id_start_date" class="form-control">
-    </div>
-
-    <!-- Fecha de fin -->
-    <div class="form-group mx-sm-3 mb-2">
-        <label for="id_end_date" class="mr-2">Fecha de fin:</label>
-        <input type="date" name="end_date" id="id_end_date" class="form-control">
-    </div>
-
-    <!-- Botón Filtrar -->
-    <button type="submit" class="btn btn-primary mb-2">Filtrar</button>
-</form>
 {% endblock %}
 
 {% block table %}
@@ -64,21 +83,46 @@
 {% endblock %}
 
 {% block scripts %}
-{{ block.super }}
 <script>
     $(document).ready(function () {
-        $('#coupon-table').DataTable({
-            "paging": true,
-            "lengthChange": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-            "language": {
-                "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
-            }
+        // Función para actualizar los resultados de búsqueda
+        function updateSearchResults() {
+            // Obtener los valores de los campos de búsqueda
+            var searchQuery = $('#id_search').val().trim();
+            var discountPercent = $('#id_discount_percent').val();
+            var startDate = $('#id_start_date').val();
+            var endDate = $('#id_end_date').val();
+            var isActive = $('#id_is_active').val();
+
+            // Realizar una solicitud AJAX al servidor
+            $.ajax({
+                url: '{% url "shop_coupons" %}',  // URL de la vista que procesará la solicitud
+                method: 'GET',
+                data: {
+                    search: searchQuery,
+                    discount_percent: discountPercent,
+                    start_date: startDate,
+                    end_date: endDate,
+                    is_active: isActive
+                },
+                success: function (data) {
+                    // Actualizar el contenido de la tabla con los resultados recibidos
+                    $('#coupon-table').html(data);
+                },
+                error: function (xhr, status, error) {
+                    // Manejar errores si los hay
+                    console.error(error);
+                }
+            });
+        }
+
+        // Detectar cambios en los campos de búsqueda y llamar a la función updateSearchResults
+        $('#id_search, #id_discount_percent, #id_start_date, #id_end_date, #id_is_active').on('change', function () {
+            updateSearchResults();
         });
+
+        // Llamar a la función inicialmente para cargar los resultados de búsqueda por defecto
+        updateSearchResults();
     });
 </script>
 {% endblock %}
