@@ -2,13 +2,19 @@
 
 {% block form %}
 <div class="row mb-3">
-    <div class="col-md-6">
+    <div class="col-md-4">
+        <label for="search-input">Nombre o descripción:</label>
         <div class="input-group">
-            <input type="text" class="form-control" id="search-input" placeholder="Buscar por nombre">
-            <div class="input-group-append">
-                <button class="btn btn-primary" id="search-button">Buscar</button>
-            </div>
+            <input type="text" class="form-control" id="search-input" placeholder="Buscar por nombre o descripción">
         </div>
+    </div>
+    <div class="col-md-2">
+        <label for="search-state">Estado:</label>
+        <select class="form-control" id="search-state">
+            <option value="">Todos los estados</option>
+            <option value="1">Activo</option>
+            <option value="0">Inactivo</option>
+        </select>
     </div>
 </div>
 {% endblock %}
@@ -41,22 +47,21 @@
 
 {% block scripts %}
 <script>
-    $(document).ready(function() {
-        $('#category-table').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,  // Deshabilitar la búsqueda de DataTables
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "order": [[ 0, "asc" ]],
-            "columnDefs": [{ "targets": [3], "orderable": false }]
-        });
-
-        // Función para realizar la búsqueda al hacer clic en el botón
-        $('#search-button').click(function() {
-            var searchText = $('#search-input').val();
-            $('#category-table').DataTable().search(searchText).draw();
+    $(document).ready(function () {
+        $('#search-input, #search-state').on('input change', function () {
+            var query = $('#search-input').val();
+            var state = $('#search-state').val();
+            $.ajax({
+                url: window.location.pathname,
+                type: 'GET',
+                data: {
+                    'q': query,
+                    'state': state
+                },
+                success: function (data) {
+                    $('#category-list').html(data);
+                }
+            });
         });
     });
 </script>

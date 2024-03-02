@@ -1,61 +1,55 @@
 {% extends 'admin/shop/list.html' %}
 
 {% block form %}
-<form method="GET" class="form-inline">
-    <!-- Modelo -->
-    <div class="form-group mx-sm-3 mb-2">
-        <label for="id_model_name" class="mr-2">Modelo:</label>
-        <select name="model_name" id="id_model_name" class="form-control">
-            <option value="" selected>Todos</option>
-            <!-- Opciones del modelo aquí -->
-        </select>
-    </div>
-
-    <!-- Acción -->
-    <div class="form-group mx-sm-3 mb-2">
-        <label for="id_action" class="mr-2">Acción:</label>
-        <select name="action" id="id_action" class="form-control">
-            <option value="" selected>Todas</option>
-            <!-- Opciones de acción aquí -->
-        </select>
-    </div>
-
-    <!-- Usuario -->
-    <div class="form-group mx-sm-3 mb-2">
-        <label for="id_user" class="mr-2">Usuario:</label>
-        <input type="text" name="user" id="id_user" class="form-control" placeholder="Usuario">
-    </div>
-
-    <!-- Fecha de inicio -->
-    <div class="form-group mx-sm-3 mb-2">
-        <label for="id_start_date" class="mr-2">Fecha de inicio:</label>
-        <input type="date" name="start_date" id="id_start_date" class="form-control">
-    </div>
-
-    <!-- Fecha de fin -->
-    <div class="form-group mx-sm-3 mb-2">
-        <label for="id_end_date" class="mr-2">Fecha de fin:</label>
-        <input type="date" name="end_date" id="id_end_date" class="form-control">
-    </div>
-
-    <!-- Ordenar por -->
-    <div class="form-group mx-sm-3 mb-2">
-        <label for="id_order_by" class="mr-2">Ordenar por:</label>
-        <select name="order_by" id="id_order_by" class="form-control">
-            <option value="model_name">Modelo (A-Z)</option>
-            <option value="-model_name">Modelo (Z-A)</option>
-            <option value="action">Acción (A-Z)</option>
-            <option value="-action">Acción (Z-A)</option>
-            <option value="user">Usuario (A-Z)</option>
-            <option value="-user">Usuario (Z-A)</option>
-            <option value="timestamp">Fecha (Más reciente)</option>
-            <option value="-timestamp">Fecha (Menos reciente)</option>
-        </select>
-    </div>
-
-    <!-- Botón Filtrar -->
-    <button type="submit" class="btn btn-primary mb-2">Filtrar</button>
-</form>
+<div class="table-responsive">
+    <table class="table table-borderless">
+        <tbody>
+            <tr>
+                <td>
+                    <div class="form-group mx-sm-3 mb-2">
+                        <label for="id_model_name" class="mr-2">Modelo:</label>
+                        <select name="model_name" id="id_model_name" class="form-control select2" style="width: 100%;">
+                            <option value="" selected>Todos</option>
+                            <!-- Opciones del modelo aquí -->
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group mx-sm-3 mb-2">
+                        <label for="id_action" class="mr-2">Acción:</label>
+                        <select name="action" id="id_action" class="form-control select2" style="width: 100%;">
+                            <option value="" selected>Todas</option>
+                            <!-- Opciones de acción aquí -->
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group mx-sm-3 mb-2">
+                        <label for="id_user" class="mr-2">Usuario:</label>
+                        <select name="user" id="id_user" class="form-control select2" style="width: 100%;">
+                            <option value="" selected>Seleccionar Usuario</option>
+                            <!-- Opciones de usuario aquí -->
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group mx-sm-3 mb-2">
+                        <label for="id_start_date" class="mr-2">Fecha de inicio:</label>
+                        <input type="date" name="start_date" id="id_start_date" class="form-control"
+                            placeholder="Fecha de inicio">
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group mx-sm-3 mb-2">
+                        <label for="id_end_date" class="mr-2">Fecha de fin:</label>
+                        <input type="date" name="end_date" id="id_end_date" class="form-control"
+                            placeholder="Fecha de fin">
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 {% endblock %}
 
 {% block table %}
@@ -84,21 +78,71 @@
 {% endblock %}
 
 {% block scripts %}
-{{ block.super }}
 <script>
     $(document).ready(function () {
-        $('#audit-log-table').DataTable({
-            "paging": true,
-            "lengthChange": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-            "language": {
-                "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
+        // Obtener modelos dinámicamente
+        $.ajax({
+            url: '/load-models/',
+            success: function (data) {
+                // Llenar el select de modelos con los datos obtenidos
+                $('#id_model_name').empty();
+                $('#id_model_name').append('<option value="" selected>Todos</option>');
+                $.each(data.models, function (index, model) {
+                    $('#id_model_name').append('<option value="' + model + '">' + model + '</option>');
+                });
+            }
+        });
+
+        // Obtener acciones dinámicamente
+        $.ajax({
+            url: '/load-actions/',
+            success: function (data) {
+                // Llenar el select de acciones con los datos obtenidos
+                $('#id_action').empty();
+                $('#id_action').append('<option value="" selected>Todas</option>');
+                $.each(data.actions, function (index, action) {
+                    $('#id_action').append('<option value="' + action + '">' + action + '</option>');
+                });
             }
         });
     });
+</script>
+<script>
+    $(document).ready(function() {
+    // Función para realizar la consulta AJAX
+    function performSearch() {
+        // Obtener los valores de los filtros
+        var modelName = $('#id_model_name').val();
+        var action = $('#id_action').val();
+        var user = $('#id_user').val();
+        var startDate = $('#id_start_date').val();
+        var endDate = $('#id_end_date').val();
+        // Realizar la consulta AJAX con los filtros
+        $.ajax({
+            url: '/search/',  // URL de la vista de búsqueda
+            method: 'GET',
+            data: {
+                'model_name': modelName,
+                'action': action,
+                'user': user,
+                'start_date': startDate,
+                'end_date': endDate
+            },
+            success: function(data) {
+                // Actualizar el contenido de la tabla con los resultados de la búsqueda
+                $('#search-results').html(data);
+            }
+        });
+    }
+
+    // Llamar a performSearch() cada vez que se produzca un cambio en los filtros
+    $('#id_model_name, #id_action, #id_user, #id_start_date, #id_end_date').on('change', function() {
+        performSearch();
+    });
+
+    // Ejecutar performSearch() al cargar la página para mostrar los resultados iniciales
+    performSearch();
+});
+
 </script>
 {% endblock %}

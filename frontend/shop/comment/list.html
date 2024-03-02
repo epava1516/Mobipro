@@ -1,49 +1,41 @@
 {% extends 'admin/shop/list.html' %}
 
 {% block form %}
-<form method="GET" class="form-inline">
-    <div class="row">
-        <!-- Usuario -->
-        <div class="form-group col-md-3">
-            <label for="id_user">Usuario:</label>
-            <input type="text" class="form-control" id="id_user" name="user">
-        </div>
-
-        <!-- Producto -->
-        <div class="form-group col-md-3">
-            <label for="id_product">Producto:</label>
-            <input type="text" class="form-control" id="id_product" name="product">
-        </div>
-
-        <!-- Fecha inicial -->
-        <div class="form-group col-md-3">
-            <label for="id_start_date">Fecha inicial:</label>
-            <input type="date" class="form-control" id="id_start_date" name="start_date">
-        </div>
-
-        <!-- Fecha final -->
-        <div class="form-group col-md-3">
-            <label for="id_end_date">Fecha final:</label>
-            <input type="date" class="form-control" id="id_end_date" name="end_date">
-        </div>
+<div class="row mb-3">
+    <div class="col-md-12">
+        <table class="table table-borderless">
+            <tbody>
+                <tr>
+                    <td><label for="search-text">Texto:</label></td>
+                    <td><input type="text" class="form-control" id="search-text" placeholder="Buscar por texto"></td>
+                    <td><label for="search-user">Usuario:</label></td>
+                    <td><select class="form-control select2" id="search-user" style="width: 100%;">
+                            <option value="">Seleccionar Usuario</option>
+                        </select></td>
+                </tr>
+                <tr>
+                    <td><label for="search-product">Producto:</label></td>
+                    <td><select class="form-control select2" id="search-product" style="width: 100%;">
+                            <option value="">Seleccionar Producto</option>
+                        </select></td>
+                    <td><label for="search-status">Estado:</label></td>
+                    <td><select class="form-control" id="search-status" style="width: 100%;">
+                            <option value="">Seleccionar Estado</option>
+                            <option value="1">Activo</option>
+                            <option value="0">Inactivo</option>
+                        </select></td>
+                </tr>
+                <tr>
+                    <td><label for="search-start-date">Fecha Inicial:</label></td>
+                    <td><input type="date" class="form-control" id="search-start-date" placeholder="Fecha Inicial"></td>
+                    <td><label for="search-end-date">Fecha Final:</label></td>
+                    <td><input type="date" class="form-control" id="search-end-date" placeholder="Fecha Final"></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
+</div>
 
-    <!-- Ordenar por -->
-    <div class="form-group">
-        <label for="id_order_by">Ordenar por:</label>
-        <select class="form-control" id="id_order_by" name="order_by">
-            <option value="created_at">Fecha (más reciente)</option>
-            <option value="-created_at">Fecha (menos reciente)</option>
-            <option value="user__username">Usuario (A-Z)</option>
-            <option value="-user__username">Usuario (Z-A)</option>
-            <option value="product__name">Producto (A-Z)</option>
-            <option value="-product__name">Producto (Z-A)</option>
-        </select>
-    </div>
-
-    <!-- Botón Filtrar -->
-    <button type="submit" class="btn btn-primary">Filtrar</button>
-</form>
 {% endblock %}
 
 {% block table %}
@@ -77,20 +69,94 @@
 {% endblock %}
 
 {% block scripts %}
-{{ block.super }}
 <script>
     $(document).ready(function () {
-        $('#comment-table').DataTable({
-            "paging": true,
-            "lengthChange": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-            "language": {
-                "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
+        $('#search-start-date, #search-end-date').on('change', function () {
+            var startDate = $('#search-start-date').val();
+            var endDate = $('#search-end-date').val();
+
+            if (!startDate) {
+                $('#search-start-date').attr('placeholder', 'Fecha Inicial');
             }
+
+            if (!endDate) {
+                $('#search-end-date').attr('placeholder', 'Fecha Final');
+            }
+
+            // Resto del código de filtrado...
+        });
+    });
+    console.log('Hola');
+</script>
+<script>
+    $(document).ready(function () {
+        // Función para cargar dinámicamente la lista de usuarios utilizando Select2
+        function loadUsers() {
+            $.ajax({
+                url: '{% url "load_users" %}',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    $('#search-user').empty();
+                    $('#search-user').append('<option value="">Seleccionar Usuario</option>');
+                    $.each(data.users, function (index, user) {
+                        $('#search-user').append('<option value="' + user.id + '">' + user.username + '</option>');
+                    });
+                    $('#search-user').select2();
+                }
+            });
+        }
+
+        // Función para cargar dinámicamente la lista de productos utilizando Select2
+        function loadProducts() {
+            $.ajax({
+                url: '{% url "load_products" %}',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    $('#search-product').empty();
+                    $('#search-product').append('<option value="">Seleccionar Producto</option>');
+                    $.each(data.products, function (index, product) {
+                        $('#search-product').append('<option value="' + product.id + '">' + product.name + '</option>');
+                    });
+                    $('#search-product').select2();
+                }
+            });
+        }
+
+        // Cargar la lista de usuarios y productos al cargar la página
+        loadUsers();
+        loadProducts();
+
+        // Función para realizar la búsqueda cuando cambia un campo de búsqueda
+        function performSearch() {
+            var searchText = $('#search-text').val();
+            var userId = $('#search-user').val();
+            var productId = $('#search-product').val();
+            var status = $('#search-status').val();
+            var startDate = $('#search-start-date').val();
+            var endDate = $('#search-end-date').val();
+
+            $.ajax({
+                url: window.location.pathname,
+                type: 'GET',
+                data: {
+                    'search_text': searchText,
+                    'user_id': userId,
+                    'product_id': productId,
+                    'status': status,
+                    'start_date': startDate,
+                    'end_date': endDate
+                },
+                success: function (data) {
+                    $('#comment-list').html(data);
+                }
+            });
+        }
+
+        // Realizar la búsqueda cuando cambia un campo de búsqueda
+        $('#search-text, #search-user, #search-product, #search-status, #search-start-date, #search-end-date').on('input change', function () {
+            performSearch();
         });
     });
 </script>

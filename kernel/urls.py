@@ -94,6 +94,7 @@ from shop.useractivity.views import (
     UserActivityDeleteView
 )
 
+from kernel.views import load_users, load_products, load_actions, load_models
 
 urlpatterns = [
     path('admin/', AdminMainPageView.as_view(), name='shop_main_page'),
@@ -195,5 +196,14 @@ shop_urls = [
     path('admin/shop/user-activity/<int:pk>/delete/', UserActivityDeleteView.as_view(), name='shop_user_activity_delete'),
 ]
 
-
 urlpatterns += shop_urls
+
+
+json_urls = [
+    path('load-users/', load_users, name='load_users'),
+    path('load-products/', load_products, name='load_products'),
+    path('load-models/', load_models, name='load_models'),
+    path('load-actions/', load_actions, name='load_actions'),
+]
+
+urlpatterns += json_urls
