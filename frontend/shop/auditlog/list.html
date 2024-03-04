@@ -10,7 +10,9 @@
                         <label for="id_model_name" class="mr-2">Modelo:</label>
                         <select name="model_name" id="id_model_name" class="form-control select2" style="width: 100%;">
                             <option value="" selected>Todos</option>
-                            <!-- Opciones del modelo aquí -->
+                            {% for model in model_list %}
+                            <option value="{{ model }}">{{ model }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                 </td>
@@ -19,7 +21,9 @@
                         <label for="id_action" class="mr-2">Acción:</label>
                         <select name="action" id="id_action" class="form-control select2" style="width: 100%;">
                             <option value="" selected>Todas</option>
-                            <!-- Opciones de acción aquí -->
+                            {% for action in action_list %}
+                            <option value="{{ action }}">{{ action }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                 </td>
@@ -28,7 +32,9 @@
                         <label for="id_user" class="mr-2">Usuario:</label>
                         <select name="user" id="id_user" class="form-control select2" style="width: 100%;">
                             <option value="" selected>Seleccionar Usuario</option>
-                            <!-- Opciones de usuario aquí -->
+                            {% for user in user_list %}
+                            <option value="{{ user }}">{{ user }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                 </td>
@@ -53,96 +59,61 @@
 {% endblock %}
 
 {% block table %}
-<table class="table table-bordered table-hover">
-    <thead>
-        <tr>
-            <th>Modelo</th>
-            <th>Acción</th>
-            <th>Usuario</th>
-            <th>Campos Cambiados</th>
-            <th>Fecha y Hora</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for log in audit_logs %}
-        <tr>
-            <td>{{ log.model_name }}</td>
-            <td>{{ log.action }}</td>
-            <td>{{ log.user }}</td>
-            <td>{{ log.changed_fields }}</td>
-            <td>{{ log.timestamp }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div>
+    <table class="table" id="auditlog-table-body">
+        <thead>
+            <tr>
+                <th>Modelo</th>
+                <th>Acción</th>
+                <th>Usuario</th>
+                <th>Campos Cambiados</th>
+                <th>Fecha y Hora</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in audit_logs %}
+            <tr>
+                <td>{{ log.model_name }}</td>
+                <td>{{ log.action }}</td>
+                <td>{{ log.user }}</td>
+                <td>{{ log.changed_fields }}</td>
+                <td>{{ log.timestamp }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
 
 {% block scripts %}
 <script>
-    $(document).ready(function () {
-        // Obtener modelos dinámicamente
-        $.ajax({
-            url: '/load-models/',
-            success: function (data) {
-                // Llenar el select de modelos con los datos obtenidos
-                $('#id_model_name').empty();
-                $('#id_model_name').append('<option value="" selected>Todos</option>');
-                $.each(data.models, function (index, model) {
-                    $('#id_model_name').append('<option value="' + model + '">' + model + '</option>');
-                });
-            }
-        });
-
-        // Obtener acciones dinámicamente
-        $.ajax({
-            url: '/load-actions/',
-            success: function (data) {
-                // Llenar el select de acciones con los datos obtenidos
-                $('#id_action').empty();
-                $('#id_action').append('<option value="" selected>Todas</option>');
-                $.each(data.actions, function (index, action) {
-                    $('#id_action').append('<option value="' + action + '">' + action + '</option>');
-                });
-            }
-        });
-    });
-</script>
-<script>
     $(document).ready(function() {
-    // Función para realizar la consulta AJAX
-    function performSearch() {
-        // Obtener los valores de los filtros
-        var modelName = $('#id_model_name').val();
-        var action = $('#id_action').val();
-        var user = $('#id_user').val();
-        var startDate = $('#id_start_date').val();
-        var endDate = $('#id_end_date').val();
-        // Realizar la consulta AJAX con los filtros
-        $.ajax({
-            url: '/search/',  // URL de la vista de búsqueda
-            method: 'GET',
-            data: {
-                'model_name': modelName,
-                'action': action,
-                'user': user,
-                'start_date': startDate,
-                'end_date': endDate
-            },
-            success: function(data) {
-                // Actualizar el contenido de la tabla con los resultados de la búsqueda
-                $('#search-results').html(data);
-            }
+        // Función para manejar los cambios en los filtros
+        $('#id_model_name, #id_action, #id_user, #id_start_date, #id_end_date').on('change', function() {
+            // Obtener los valores de los filtros
+            var modelName = $('#id_model_name').val();
+            var action = $('#id_action').val();
+            var user = $('#id_user').val();
+            var startDate = $('#id_start_date').val();
+            var endDate = $('#id_end_date').val();
+
+            // Enviar una solicitud AJAX al servidor
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'auditlog_filtered' %}",
+                data: {
+                    'model_name': modelName,
+                    'action': action,
+                    'user': user,
+                    'start_date': startDate,
+                    'end_date': endDate
+                },
+                success: function(data) {
+                    // Actualizar el cuerpo de la tabla con los datos recibidos
+                    $('#auditlog-table-body').html(data.html);
+                }
+            });
         });
-    }
-
-    // Llamar a performSearch() cada vez que se produzca un cambio en los filtros
-    $('#id_model_name, #id_action, #id_user, #id_start_date, #id_end_date').on('change', function() {
-        performSearch();
     });
-
-    // Ejecutar performSearch() al cargar la página para mostrar los resultados iniciales
-    performSearch();
-});
-
 </script>
 {% endblock %}

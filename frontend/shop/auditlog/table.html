@@ -1,0 +1,28 @@
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Modelo</th>
+                <th>Acción</th>
+                <th>Usuario</th>
+                <th>Campos Cambiados</th>
+                <th>Fecha y Hora</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in audit_logs %}
+            <tr>
+                <td>{{ log.model_name }}</td>
+                <td>{{ log.action }}</td>
+                <td>{{ log.user }}</td>
+                <td>{{ log.changed_fields }}</td>
+                <td>{{ log.timestamp }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No se encontraron registros.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

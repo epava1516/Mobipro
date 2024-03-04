@@ -20,49 +20,56 @@
 {% endblock %}
 
 {% block table %}
-<table class="table">
-    <thead>
-        <tr>
-            <th data-sortable="true">Nombre</th>
-            <th>Descripción</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for category in categories %}
-        <tr>
-            <td>{{ category.name }}</td>
-            <td>{{ category.description }}</td>
-            <td>{{ category.is_active }}</td>
-            <td>
-                <a href="{% url 'shop_categories_edit' category.id %}" class="btn btn-sm btn-primary">Editar</a>
-                <a href="{% url 'shop_categories_delete' category.id %}" class="btn btn-sm btn-danger">Eliminar</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div id="table-container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th data-sortable="true">Nombre</th>
+                <th>Descripción</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category in categories %}
+            <tr>
+                <td>{{ category.name }}</td>
+                <td>{{ category.description }}</td>
+                <td>{{ category.is_active }}</td>
+                <td>
+                    <a href="{% url 'shop_categories_edit' category.id %}" class="btn btn-sm btn-primary">Editar</a>
+                    <a href="{% url 'shop_categories_delete' category.id %}" class="btn btn-sm btn-danger">Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
 
 {% block scripts %}
 <script>
-    $(document).ready(function () {
-        $('#search-input, #search-state').on('input change', function () {
-            var query = $('#search-input').val();
-            var state = $('#search-state').val();
-            $.ajax({
-                url: window.location.pathname,
-                type: 'GET',
-                data: {
-                    'q': query,
-                    'state': state
-                },
-                success: function (data) {
-                    $('#category-list').html(data);
-                }
-            });
+    $(document).ready(function() {
+    $('#search-input, #search-state').on('input change', function() {
+        // Obtener datos del formulario
+        var query = $('#search-input').val();
+        var state = $('#search-state').val();
+
+        // Enviar datos al servidor usando AJAX
+        $.ajax({
+            type: 'GET',
+            url: "{% url 'category_filtered' %}",
+            data: {
+                'q': query,
+                'state': state
+            },
+            success: function(data) {
+                // Actualizar la tabla con los resultados recibidos
+                $('#table-container').html(data.html);
+            }
         });
     });
+});
+
 </script>
 {% endblock %}

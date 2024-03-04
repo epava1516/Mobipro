@@ -1,0 +1,28 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}
+{{ form_title }} | {{ action }} {{ shop_title }} | Shop
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3 class="card-title">{{ form_title }}</h3>
+                        <div class="ml-auto">
+                            <a href="{{ list_url_variable }}" class="btn btn-secondary">Volver a la lista</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% block form %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

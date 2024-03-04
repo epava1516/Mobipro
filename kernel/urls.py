@@ -1,6 +1,6 @@
 from django.urls import path
-from kernel.views import AdminMainPageView
-from shop.auditlog.views import AuditLogListView
+from kernel.views import AdminMainPageView, ShopMainPageView
+from shop.auditlog.views import AuditLogListView, auditlog_filtered
 from shop.comment.views import (
     CommentListView, 
     CommentCreateView, 
@@ -13,7 +13,8 @@ from shop.category.views import (
     CategoryCreateView, 
     CategoryDetailView, 
     CategoryUpdateView, 
-    CategoryDeleteView
+    CategoryDeleteView,
+    category_filtered,
 )
 from shop.coupon.views import (
     CouponListView, 
@@ -94,10 +95,11 @@ from shop.useractivity.views import (
     UserActivityDeleteView
 )
 
-from kernel.views import load_users, load_products, load_actions, load_models
+from kernel.views import load_users, load_products, load_actions, load_models, load_order_number
 
 urlpatterns = [
     path('admin/', AdminMainPageView.as_view(), name='shop_main_page'),
+    path('admin/shop/', ShopMainPageView.as_view(), name='shop_main_page'),
 ]
 
 shop_urls = [
@@ -200,10 +202,13 @@ urlpatterns += shop_urls
 
 
 json_urls = [
+    path('category-filtered', category_filtered, name='category_filtered'),
+    path('auditlog-filtered/', auditlog_filtered, name='auditlog_filtered'),
     path('load-users/', load_users, name='load_users'),
-    path('load-products/', load_products, name='load_products'),
     path('load-models/', load_models, name='load_models'),
     path('load-actions/', load_actions, name='load_actions'),
+    path('load-products/', load_products, name='load_products'),
+    path('load-order-number/', load_order_number, name='load_order_number'),
 ]
 
 urlpatterns += json_urls

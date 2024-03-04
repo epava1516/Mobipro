@@ -40,7 +40,7 @@
         </tbody>
     </table>
 </div>
-{% endblock %}
+{% endblock %}  
 
 {% block table %}
 <table class="table">
@@ -71,55 +71,44 @@
 {% block scripts %}
 <script>
     $(document).ready(function () {
-        // Obtener modelos dinámicamente
+        // Obtener usuarios dinámicamente
         $.ajax({
-            url: '/load-models/',
+            url: "{% url 'load_users' %}",
             success: function (data) {
-                // Llenar el select de modelos con los datos obtenidos
-                $('#id_model_name').empty();
-                $('#id_model_name').append('<option value="" selected>Todos</option>');
-                $.each(data.models, function (index, model) {
-                    $('#id_model_name').append('<option value="' + model + '">' + model + '</option>');
+                // Llenar el select de usuarios con los datos obtenidos
+                $('#id_user').empty();
+                $('#id_user').append('<option value="" selected>Seleccionar Usuario</option>');
+                $.each(data.users, function (index, user) {
+                    $('#id_user').append('<option value="' + user.id + '">' + user.username + '</option>');
                 });
             }
         });
 
-        // Obtener acciones dinámicamente
-        $.ajax({
-            url: "{% url 'load_actions' %}",
-            success: function (data) {
-                // Llenar el select de acciones con los datos obtenidos
-                $('#id_action').empty();
-                $('#id_action').append('<option value="" selected>Todas</option>');
-                $.each(data.actions, function (index, action) {
-                    $('#id_action').append('<option value="' + action + '">' + action + '</option>');
-                });
-            }
-        });
-    });
-</script>
-<script>
-    $(document).ready(function () {
-        // Función para realizar la consulta AJAX
+        // Función para realizar la consulta AJAX y actualizar los resultados de la galería
         function performSearch() {
             // Obtener los valores de los filtros
             var user = $('#id_user').val();
             var status = $('#id_status').val();
             var startDate = $('#id_start_date').val();
             var endDate = $('#id_end_date').val();
+
             // Realizar la consulta AJAX con los filtros
             $.ajax({
-                url: "{% url 'shop_gallery' %}",  // URL de la vista de búsqueda de cupones
+                url:  "{% url 'shop_gallery' %}",  // URL de la vista de búsqueda de galería
                 method: 'GET',
                 data: {
-                    'user': user,
-                    'status': status,
-                    'start_date': startDate,
-                    'end_date': endDate
+                    user: user,
+                    status: status,
+                    start_date: startDate,
+                    end_date: endDate
                 },
-                success: function(data) {
-                    // Actualizar el contenido de la tabla con los resultados de la búsqueda
-                    $('#search-results').html(data);
+                success: function (data) {
+                    // Actualizar el contenido de la galería con los resultados obtenidos
+                    $('#gallery-results').html(data);
+                },
+                error: function (xhr, status, error) {
+                    // Manejar errores si los hay
+                    console.error(error);
                 }
             });
         }

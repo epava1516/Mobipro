@@ -1,66 +1,76 @@
 {% extends 'admin/shop/list.html' %}
 
-{% block form %}
-<form method="GET" class="form-inline">
-    <div class="form-group mx-sm-3 mb-2">
-        <label for="name" class="mr-2">Nombre:</label>
-        <input type="text" class="form-control" id="name" name="name">
-    </div>
-
-    <div class="form-group mx-sm-3 mb-2">
-        <label for="description" class="mr-2">Descripción:</label>
-        <input type="text" class="form-control" id="description" name="description">
-    </div>
-
-    <div class="form-group mx-sm-3 mb-2">
-        <label for="min_price" class="mr-2">Precio Mínimo:</label>
-        <input type="number" class="form-control" id="min_price" name="min_price">
-    </div>
-
-    <div class="form-group mx-sm-3 mb-2">
-        <label for="max_price" class="mr-2">Precio Máximo:</label>
-        <input type="number" class="form-control" id="max_price" name="max_price">
-    </div>
-
-    <div class="form-group mx-sm-3 mb-2">
-        <label for="min_stock" class="mr-2">Existencias Mínimas:</label>
-        <input type="number" class="form-control" id="min_stock" name="min_stock">
-    </div>
-
-    <div class="form-group mx-sm-3 mb-2">
-        <label for="max_stock" class="mr-2">Existencias Máximas:</label>
-        <input type="number" class="form-control" id="max_stock" name="max_stock">
-    </div>
-
-    <div class="form-group mx-sm-3 mb-2">
-        <label for="category" class="mr-2">Categoría:</label>
-        <select class="form-control" id="category" name="category">
-            <option value="">Todas</option>
-            <!-- Agregar opciones de categorías aquí -->
-        </select>
-    </div>
-
-    <div class="form-group mx-sm-3 mb-2">
-        <label for="tag" class="mr-2">Etiqueta:</label>
-        <select class="form-control" id="tag" name="tag">
-            <option value="">Todas</option>
-            <!-- Agregar opciones de etiquetas aquí -->
-        </select>
-    </div>
-
-    <div class="form-group mx-sm-3 mb-2">
-        <label for="start_date" class="mr-2">Fecha de Creación:</label>
-        <input type="date" class="form-control" id="start_date" name="start_date">
-    </div>
-
-    <div class="form-group mx-sm-3 mb-2">
-        <label for="end_date" class="mr-2">Fecha de Fin:</label>
-        <input type="date" class="form-control" id="end_date" name="end_date">
-    </div>
-
-    <button type="submit" class="btn btn-primary mb-2">Filtrar</button>
-</form>
+{% block head %}
+<!-- Agrega los archivos CSS de Select2 -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 {% endblock %}
+
+{% block form %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="name_description">Nombre o Descripción:</label>
+            <input type="text" class="form-control" id="name_description" name="name_description">
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="price-range">Precio:</label>
+            <div class="slider slider-horizontal">
+                <div class="slider-track">
+                    <div class="slider-track-low" style="left: 0%; width: 25%;"></div>
+                    <div class="slider-selection" style="left: 25%; width: 31.25%;"></div>
+                    <div class="slider-track-high" style="right: 0%; width: 43.75%;"></div>
+                </div>
+                <div class="slider-handle min-slider-handle round" role="slider" aria-valuemin="-200" aria-valuemax="200" aria-valuenow="-100" style="left: 25%;" tabindex="0"></div>
+                <div class="slider-handle max-slider-handle round" role="slider" aria-valuemin="-200" aria-valuemax="200" aria-valuenow="25" style="left: 56.25%;" tabindex="0"></div>
+            </div>
+            <input type="text" id="price-range" name="price_range" value="" class="slider form-control" data-slider-min="-200" data-slider-max="200" data-slider-step="5" data-slider-value="[-100,100]" data-slider-orientation="horizontal" data-slider-selection="before" data-slider-tooltip="show" style="display: none;" data-value="-100,25">
+        </div>
+        <div class="form-group">
+            <label for="stock-range">Existencias:</label>
+            <input type="text" id="stock-range" name="stock_range" value="" class="form-control">
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="id_label_multiple">Categorías:</label>
+            <select class="js-example-basic-multiple js-states form-control select2-hidden-accessible" id="id_label_multiple" multiple="" aria-hidden="true">
+                <optgroup label="Alaskan/Hawaiian Time Zone">
+                    <option value="AK">Alaska</option>
+                    <option value="HI">Hawaii</option>
+                </optgroup>
+                <optgroup label="Pacific Time Zone">
+                    <option value="CA">California</option>
+                    <option value="NV">Nevada</option>
+                    <option value="OR">Oregon</option>
+                    <option value="WA">Washington</option>
+                </optgroup>
+                <!-- Agrega más opciones de categorías según sea necesario -->
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="tags">Etiquetas:</label>
+            <span id="tags" class="form-control select2-selection--multiple" multiple="multiple">
+                <!-- Opciones de etiquetas -->
+            </span>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="start_date">Fecha de inicio:</label>
+            <input type="date" id="start_date" name="start_date" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="end_date">Fecha de fin:</label>
+            <input type="date" id="end_date" name="end_date" class="form-control">
+        </div>
+    </div>
+</div>
+{% endblock %}
+
 
 {% block table %}
 <table class="table">
@@ -103,5 +113,13 @@
 {% endblock %}
 
 {% block scripts %}
-<!-- Aquí puedes agregar cualquier script necesario -->
+<script>
+    $(document).ready(function() {
+        // Inicializa Select2 para convertir el select en un dropdown multiseleccionable
+        $('.js-example-basic-multiple').select2({
+            placeholder: 'Selecciona una o varias categorías',
+            allowClear: true // Permite borrar la selección
+        });
+    });
+</script>
 {% endblock %}
