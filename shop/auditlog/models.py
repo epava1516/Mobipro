@@ -19,5 +19,5 @@ class AuditLog(models.Model):
     instance_id = models.PositiveIntegerField()
     action = models.CharField(max_length=10)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    changed_fields = JSONField()
+    changed_fields = JSONField(null=True)
     timestamp = models.DateTimeField(default=timezone.now)

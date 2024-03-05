@@ -1,7 +1,6 @@
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from shop.category.models import Category
-from django.db.models import Q
 from django.template.loader import render_to_string
 from django.http import JsonResponse
 
@@ -28,14 +27,7 @@ class CategoryListView(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        query = self.request.GET.get('q')
-        state = self.request.GET.get('state')
-
-        if query:
-            queryset = queryset.filter(Q(name__icontains=query) | Q(description__icontains=query))
-        if state:
-            queryset = queryset.filter(is_active=bool(int(state)))
-
+        queryset = queryset.filter(is_active=True)
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -77,9 +69,6 @@ class CategoryUpdateView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        objeto = context.get('object')
-        print(dir(self))
-        print(self.get_success_url())
         context['list_url_variable'] = reverse_lazy('shop_categories')  # URL de la vista de agregar
         context['shop_title'] = 'Editar Categoría'
         context['title'] = 'Category'
@@ -90,3 +79,10 @@ class CategoryDeleteView(DeleteView):
     model = Category
     template_name = 'shop/category/confirm_delete.html'
     success_url = reverse_lazy('shop_categories')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['list_url_variable'] = reverse_lazy('shop_categories')  # URL de la vista de agregar
+        context['shop_title'] = 'Categoría'
+        context['title'] = 'Category'
+        return context

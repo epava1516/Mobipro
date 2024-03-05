@@ -98,11 +98,10 @@ from shop.useractivity.views import (
 from kernel.views import load_users, load_products, load_actions, load_models, load_order_number
 
 urlpatterns = [
-    path('admin/', AdminMainPageView.as_view(), name='shop_main_page'),
+    path('admin/', AdminMainPageView.as_view(), name='admin_main_page'),
     path('admin/shop/', ShopMainPageView.as_view(), name='shop_main_page'),
-]
 
-shop_urls = [
+
     # Audit-Log
     path('admin/shop/audit-log/', AuditLogListView.as_view(), name='shop_audit_log'),
 
@@ -196,12 +195,8 @@ shop_urls = [
     path('admin/shop/user-activity/<int:pk>/', UserActivityDetailView.as_view(), name='shop_user_activity_detail'),
     path('admin/shop/user-activity/<int:pk>/edit/', UserActivityUpdateView.as_view(), name='shop_user_activity_edit'),
     path('admin/shop/user-activity/<int:pk>/delete/', UserActivityDeleteView.as_view(), name='shop_user_activity_delete'),
-]
 
-urlpatterns += shop_urls
-
-
-json_urls = [
+    # Functions
     path('category-filtered', category_filtered, name='category_filtered'),
     path('auditlog-filtered/', auditlog_filtered, name='auditlog_filtered'),
     path('load-users/', load_users, name='load_users'),
@@ -210,5 +205,3 @@ json_urls = [
     path('load-products/', load_products, name='load_products'),
     path('load-order-number/', load_order_number, name='load_order_number'),
 ]
-
-urlpatterns += json_urls

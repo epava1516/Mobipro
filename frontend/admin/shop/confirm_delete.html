@@ -1,0 +1,25 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}
+Confirmar Eliminación | Eliminar {{ shop_title }} | Shop
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Confirmar Eliminación</div>
+                <div class="card-body">
+                    <p>¿Estás seguro de que deseas eliminar {{ shop_title | lower }} "{{ object }}"?</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="submit" class="btn btn-danger" value="Eliminar">
+                        <a href="{% url 'shop_categories' %}" class="btn btn-secondary">Cancelar</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
