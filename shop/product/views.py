@@ -1,6 +1,7 @@
-from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
-from django.urls import reverse_lazy
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView, RedirectView
+from django.urls import reverse_lazy, reverse
 from shop.product.models import Product
+from django.shortcuts import get_object_or_404
 
 class ProductListView(ListView):
     model = Product
@@ -36,3 +37,12 @@ class ProductDeleteView(DeleteView):
     model = Product
     template_name = 'shop/product/confirm_delete.html'
     success_url = reverse_lazy('shop_products')
+
+class ProductActivateView(RedirectView):
+    permanent = False
+
+    def get_redirect_url(self, *args, **kwargs):
+        product = get_object_or_404(Product, pk=kwargs['pk'])
+        product.is_active = False
+        product.save()
+        return reverse('shop_products')

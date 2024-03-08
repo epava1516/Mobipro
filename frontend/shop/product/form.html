@@ -24,24 +24,14 @@
     </div>
 
     <div class="form-group">
-        <label for="id_gallery">Galería:</label>
-        <select name="gallery" id="id_gallery" class="form-control">
-            <option value="" {% if not object.gallery %}selected{% endif %}>Ninguna</option>
-            {% for gallery in galleries %}
-            <option value="{{ gallery.pk }}" {% if object.gallery_id == gallery.pk %}selected{% endif %}>{{ gallery.name }}</option>
-            {% endfor %}
-        </select>
-    </div>
-
-    <div class="form-group">
         <label for="id_category">Categoría:</label>
-        <select name="category" id="id_category" class="form-control">
-            <option value="" {% if not object.category %}selected{% endif %}>Ninguna</option>
+        <select name="category" id="id_category" class="form-control" multiple>
             {% for category in categories %}
-            <option value="{{ category.pk }}" {% if object.category_id == category.pk %}selected{% endif %}>{{ category.name }}</option>
+            <option value="{{ category.pk }}" {% if category in object.category.all %}selected{% endif %}>{{ category.name }}</option>
             {% endfor %}
         </select>
     </div>
+    
 
     <div class="form-group">
         <label for="id_tags">Etiquetas:</label>
@@ -50,14 +40,6 @@
             <option value="{{ tag.pk }}" {% if tag in object.tags.all %}selected{% endif %}>{{ tag.name }}</option>
             {% endfor %}
         </select>
-    </div>
-
-    <div class="form-group">
-        <label for="id_is_active">¿Está activo?:</label>
-        <div class="custom-control custom-switch">
-            <input type="checkbox" name="is_active" id="id_is_active" class="custom-control-input" {% if object.is_active %}checked{% endif %}>
-            <label class="custom-control-label" for="id_is_active">Activar/desactivar</label>
-        </div>
     </div>
 
     <button type="submit" class="btn btn-primary">{{ action }}</button>

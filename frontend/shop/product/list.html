@@ -22,10 +22,15 @@
                     <div class="slider-selection" style="left: 25%; width: 31.25%;"></div>
                     <div class="slider-track-high" style="right: 0%; width: 43.75%;"></div>
                 </div>
-                <div class="slider-handle min-slider-handle round" role="slider" aria-valuemin="-200" aria-valuemax="200" aria-valuenow="-100" style="left: 25%;" tabindex="0"></div>
-                <div class="slider-handle max-slider-handle round" role="slider" aria-valuemin="-200" aria-valuemax="200" aria-valuenow="25" style="left: 56.25%;" tabindex="0"></div>
+                <div class="slider-handle min-slider-handle round" role="slider" aria-valuemin="-200"
+                    aria-valuemax="200" aria-valuenow="-100" style="left: 25%;" tabindex="0"></div>
+                <div class="slider-handle max-slider-handle round" role="slider" aria-valuemin="-200"
+                    aria-valuemax="200" aria-valuenow="25" style="left: 56.25%;" tabindex="0"></div>
             </div>
-            <input type="text" id="price-range" name="price_range" value="" class="slider form-control" data-slider-min="-200" data-slider-max="200" data-slider-step="5" data-slider-value="[-100,100]" data-slider-orientation="horizontal" data-slider-selection="before" data-slider-tooltip="show" style="display: none;" data-value="-100,25">
+            <input type="text" id="price-range" name="price_range" value="" class="slider form-control"
+                data-slider-min="-200" data-slider-max="200" data-slider-step="5" data-slider-value="[-100,100]"
+                data-slider-orientation="horizontal" data-slider-selection="before" data-slider-tooltip="show"
+                style="display: none;" data-value="-100,25">
         </div>
         <div class="form-group">
             <label for="stock-range">Existencias:</label>
@@ -37,7 +42,8 @@
     <div class="col-md-6">
         <div class="form-group">
             <label for="id_label_multiple">Categorías:</label>
-            <select class="js-example-basic-multiple js-states form-control select2-hidden-accessible" id="id_label_multiple" multiple="" aria-hidden="true">
+            <select class="js-example-basic-multiple js-states form-control select2-hidden-accessible"
+                id="id_label_multiple" multiple="" aria-hidden="true">
                 <optgroup label="Alaskan/Hawaiian Time Zone">
                     <option value="AK">Alaska</option>
                     <option value="HI">Hawaii</option>
@@ -71,19 +77,15 @@
 </div>
 {% endblock %}
 
-
 {% block table %}
 <table class="table">
     <thead>
         <tr>
             <th>Nombre</th>
-            <th>Descripción</th>
             <th>Precio</th>
             <th>Existencias</th>
-            <th>Categoría</th>
-            <th>Etiquetas</th>
-            <th>Fecha de Creación</th>
-            <th>Última Actualización</th>
+            <th>Creación</th>
+            <th>Actualización</th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -91,20 +93,28 @@
         {% for product in products %}
         <tr>
             <td>{{ product.name }}</td>
-            <td>{{ product.description }}</td>
             <td>{{ product.price }}</td>
             <td>{{ product.stock }}</td>
-            <td>{{ product.category }}</td>
+            <td>{{ product.created_at|date:"d/m/Y" }}</td>
+            <td>{{ product.updated_at|date:"d/m/Y" }}</td>
             <td>
-                {% for tag in product.tags.all %}
-                    {{ tag.name }}
-                    {% if not forloop.last %}, {% endif %}
-                {% endfor %}
+                <div class="btn-group" role="group" aria-label="Botones de Acción">
+                    <a href="{% url 'shop_products_edit' product.id %}" class="btn btn-sm btn-primary">Editar</a>
+                    {% if product.is_active %}
+                    <a href="{% url 'shop_products_delete' product.id %}" class="btn btn-sm btn-danger">Eliminar</a>
+                    {% else %}
+                    <a href="{% url 'shop_products_activate' product.id %}" class="btn btn-sm btn-success">Activar</a>
+                    {% endif %}
+                    <button class="btn btn-sm btn-secondary toggle-details">Leer más</button>
+                </div>
             </td>
-            <td>{{ product.created_at }}</td>
-            <td>{{ product.updated_at }}</td>
-            <td>
-                <!-- Aquí puedes agregar enlaces para editar o eliminar el producto -->
+        </tr>
+        <tr class="extra-info" style="display: none;">
+            <td colspan="6">
+                <strong>Descripción:</strong> {{ product.description }}<br>
+                <strong>Categorías:</strong> {{ product.category }}<br>
+                <strong>Etiquetas:</strong> {% for tag in product.tags.all %}{{ tag.name }}{% if not forloop.last %}, {% endif %}{% endfor %}<br>
+                <strong>Activo:</strong> {{ product.is_active }}
             </td>
         </tr>
         {% endfor %}
@@ -112,9 +122,18 @@
 </table>
 {% endblock %}
 
+
 {% block scripts %}
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
+        $('.toggle-details').click(function () {
+            $(this).closest('tr').next('.extra-info').toggle();
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
         // Inicializa Select2 para convertir el select en un dropdown multiseleccionable
         $('.js-example-basic-multiple').select2({
             placeholder: 'Selecciona una o varias categorías',

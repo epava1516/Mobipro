@@ -1,3 +1,4 @@
+from enum import auto
 from django.db import models
 from django.utils import timezone
 from django.db.models.signals import post_save
@@ -30,7 +31,7 @@ class Product(models.Model):
     gallery = models.ForeignKey(Gallery, on_delete=models.SET_NULL, blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True, db_index=True)
     tags = models.ManyToManyField(Tag, blank=True)
-    created_at = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
 

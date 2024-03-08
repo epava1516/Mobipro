@@ -14,6 +14,7 @@ from shop.category.views import (
     CategoryDetailView, 
     CategoryUpdateView, 
     CategoryDeleteView,
+    CategoryActivateView,
     category_filtered,
 )
 from shop.coupon.views import (
@@ -42,7 +43,8 @@ from shop.product.views import (
     ProductCreateView, 
     ProductDetailView, 
     ProductUpdateView, 
-    ProductDeleteView
+    ProductDeleteView,
+    ProductActivateView
 )
 from shop.promotion.views import (
     PromotionListView, 
@@ -111,6 +113,7 @@ urlpatterns = [
     path('admin/shop/categories/detail/', CategoryDetailView.as_view(), name='shop_categories_detail'),
     path('admin/shop/categories/<int:pk>/edit/', CategoryUpdateView.as_view(), name='shop_categories_edit'),
     path('admin/shop/categories/<int:pk>/delete/', CategoryDeleteView.as_view(), name='shop_categories_delete'),
+    path('admin/shop/categories/<int:pk>/activate/', CategoryActivateView.as_view(), name='shop_categories_activate'),
 
     # Comments CRUD
     path('admin/shop/comments/', CommentListView.as_view(), name='shop_comments'),
@@ -146,6 +149,7 @@ urlpatterns = [
     path('admin/shop/products/detail/', ProductDetailView.as_view(), name='shop_products_detail'),
     path('admin/shop/products/<int:pk>/edit/', ProductUpdateView.as_view(), name='shop_products_edit'),
     path('admin/shop/products/<int:pk>/delete/', ProductDeleteView.as_view(), name='shop_products_delete'),
+    path('admin/shop/products/<int:pk>/activate/', ProductActivateView.as_view(), name='shop_products_activate'),
 
     # Promotion CRUD
     path('admin/shop/promotions/', PromotionListView.as_view(), name='shop_promotions'),

@@ -1,8 +1,9 @@
-from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
-from django.urls import reverse_lazy
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView, RedirectView
+from django.urls import reverse_lazy, reverse
 from shop.category.models import Category
 from django.template.loader import render_to_string
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 
 def category_filtered(request):
     # Obtener datos de filtrado
@@ -86,3 +87,12 @@ class CategoryDeleteView(DeleteView):
         context['shop_title'] = 'Categoría'
         context['title'] = 'Category'
         return context
+
+class CategoryActivateView(RedirectView):
+    permanent = False
+
+    def get_redirect_url(self, *args, **kwargs):
+        category = get_object_or_404(Category, pk=kwargs['pk'])
+        category.is_active = False
+        category.save()
+        return reverse('shop_categories')
