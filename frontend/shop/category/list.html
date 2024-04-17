@@ -20,60 +20,53 @@
 {% endblock %}
 
 {% block table %}
-<div id="table-container">
-    <table class="table">
-        <thead>
-            <tr>
-                <th data-sortable="true">Nombre</th>
-                <th>Descripción</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for category in categories %}
-            <tr>
-                <td>{{ category.name }}</td>
-                <td>{{ category.description }}</td>
-                <td>{{ category.is_active }}</td>
-                <td>
-                    <a href="{% url 'shop_categories_edit' category.id %}" class="btn btn-sm btn-primary">Editar</a>
-                    {% if category.is_active %}
-                    <a href="{% url 'shop_categories_delete' category.id %}" class="btn btn-sm btn-danger">Eliminar</a>
-                    {% else %}
-                    <a href="{% url 'shop_categories_activate' category.id %}" class="btn btn-sm btn-success">Activar</a>
-                    {% endif %}
-                </td>                
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+    {% include "shop/category/table.html" %}
 {% endblock %}
+
 
 {% block scripts %}
 <script>
-    $(document).ready(function() {
-    $('#search-input, #search-state').on('input change', function() {
-        // Obtener datos del formulario
-        var query = $('#search-input').val();
-        var state = $('#search-state').val();
+    var csrfToken = '{{ csrf_token }}';
+    $(document).ready(function () {
+        $('#search-input, #search-state').on('input change', function () {
+            // Obtener datos del formulario
+            var query = $('#search-input').val();
+            var state = $('#search-state').val();
 
-        // Enviar datos al servidor usando AJAX
-        $.ajax({
-            type: 'GET',
-            url: "{% url 'category_filtered' %}",
-            data: {
-                'q': query,
-                'state': state
-            },
-            success: function(data) {
-                // Actualizar la tabla con los resultados recibidos
-                $('#table-container').html(data.html);
-            }
+            // Enviar datos al servidor usando AJAX
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'category_filtered' %}",
+                data: {
+                    'q': query,
+                    'state': state
+                },
+                success: function (data) {
+                    // Actualizar la tabla con los resultados recibidos
+                    $('#table-container').html(data.html);
+                }
+            });
         });
     });
-});
 
+    function changeCategoryStatus(button) {
+        var btn = $(button);
+        var url = btn.data('url');
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: {
+                csrfmiddlewaretoken: csrfToken, // Usa la variable global de CSRF token
+            },
+            success: function(data) {
+                // Recargar la tabla después de cambiar el estado
+                $('#search-input, #search-state').trigger('change');
+            },
+            error: function(xhr, status, error) {
+                // Manejo básico de errores, deberías mejorar este manejo
+                alert("Ha ocurrido un error: " + error);
+            }
+        });
+    }
 </script>
 {% endblock %}

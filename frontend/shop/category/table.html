@@ -12,14 +12,14 @@
         <tr>
             <td>{{ category.name }}</td>
             <td>{{ category.description }}</td>
-            <td>{{ category.is_active }}</td>
+            <td>{{ category.is_active | yesno:"Activo,Inactivo" }}</td>
             <td>
                 <a href="{% url 'shop_categories_edit' category.id %}" class="btn btn-sm btn-primary">Editar</a>
-                {% if category.is_active %}
-                <a href="{% url 'shop_categories_delete' category.id %}" class="btn btn-sm btn-danger">Eliminar</a>
-                {% else %}
-                <a href="{% url 'shop_categories_activate' category.id %}" class="btn btn-sm btn-success">Activar</a>
-                {% endif %}
+                <button class="btn btn-sm {{ category.is_active|yesno:'btn-danger,btn-success' }}"
+                    data-url="{% url 'shop_categories_activate' category.id %}"
+                    onclick="changeCategoryStatus(this);">
+                    {{ category.is_active|yesno:'Desactivar,Activar' }}
+                </button>
             </td>            
         </tr>
         {% endfor %}

@@ -1,9 +1,12 @@
+<!-- Este template es la base de todo el frontend -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     {% include "base/head.html" %}
     <title>{% block title %}{% endblock %} | Mobipro's Admin Page</title>
+    {% block head %}
+    {% endblock %}
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -42,6 +45,7 @@
     <!-- ./wrapper -->
 
     {% block scripts %}
+    
     {% endblock %}
 </body>
 

@@ -1,4 +1,9 @@
-{% extends 'admin/main.html' %}
+<!-- Esta plantilla es la base para que se listen todos los modelos -->
+{% extends 'admin/base.html' %}
+
+{% block head %}
+<meta name="csrf-token" content="{{ csrf_token }}">
+{% endblock %}
 
 {% block title %}
 {{ title }} List | Shop
@@ -14,7 +19,7 @@
                         <h3 class="card-title">Lista de {{ shop_title }}</h3>
                         <div class="ml-auto">
                             {% if show_add_button %}
-                                <a href="{{ add_url_variable }}" class="btn btn-primary">Añadir {{ shop_title }}</a>
+                            <a href="{{ add_url_variable }}" class="btn btn-primary">Añadir {{ shop_title }}</a>
                             {% endif %}
                         </div>
                     </div>
@@ -23,10 +28,11 @@
                     {% block form %}
                     <!-- Add your main page content here -->
                     {% endblock %}
-                    {% block table %}
-                    <!-- Add your main page content here -->
-                    {% endblock %}
-                    
+                    <div id="table-container">
+                        {% block table %}
+                        <!-- Add your main page content here -->
+                        {% endblock %}
+                    </div>
                 </div>
             </div>
         </div>

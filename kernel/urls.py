@@ -3,16 +3,15 @@ from kernel.views import AdminMainPageView, ShopMainPageView
 from shop.auditlog.views import AuditLogListView, auditlog_filtered
 from shop.comment.views import (
     CommentListView, 
-    CommentCreateView, 
     CommentDetailView, 
-    CommentUpdateView, 
-    CommentDeleteView
+    CommentUpdateView,
+    CommentActivateView,
 )
 from shop.category.views import (
-    CategoryListView, 
-    CategoryCreateView, 
-    CategoryDetailView, 
-    CategoryUpdateView, 
+    CategoryListView,
+    CategoryCreateView,
+    CategoryDetailView,
+    CategoryUpdateView,
     CategoryDeleteView,
     CategoryActivateView,
     category_filtered,
@@ -117,10 +116,9 @@ urlpatterns = [
 
     # Comments CRUD
     path('admin/shop/comments/', CommentListView.as_view(), name='shop_comments'),
-    path('admin/shop/comments/add/', CommentCreateView.as_view(), name='shop_comments_add'),
     path('admin/shop/comments/detail/', CommentDetailView.as_view(), name='shop_comments_detail'),
     path('admin/shop/comments/<int:pk>/edit/', CommentUpdateView.as_view(), name='shop_comments_edit'),
-    path('admin/shop/comments/<int:pk>/delete/', CommentDeleteView.as_view(), name='shop_comments_delete'),
+    path('admin/shop/comments/<int:pk>/activate/', CommentActivateView.as_view(), name='shop_comments_edit'),
 
     # Coupons CRUD
     path('admin/shop/coupons/', CouponListView.as_view(), name='shop_coupons'),

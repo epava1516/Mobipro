@@ -1,0 +1,53 @@
+{% extends 'admin/shop/form.html' %}
+
+{% block title %}
+{{ action }} Comentario | Shop
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3 class="card-title">{{ action }} Comentario</h3>
+                        <div class="ml-auto">
+                            <a href="{{ list_url_variable }}" class="btn btn-secondary">Volver a la lista</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="id_user">Usuario:</label>
+                            <select name="user" id="id_user" class="form-control select2">
+                                {% for user in users %}
+                                <option value="{{ user.id }}">{{ user.username }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_product">Producto:</label>
+                            <select name="product" id="id_product" class="form-control select2">
+                                {% for product in products %}
+                                <option value="{{ product.id }}">{{ product.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_text">Texto:</label>
+                            <textarea name="text" id="id_text" class="form-control" rows="3"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">{{ action }}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

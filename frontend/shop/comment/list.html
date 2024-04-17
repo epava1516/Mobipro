@@ -1,163 +1,76 @@
 {% extends 'admin/shop/list.html' %}
 
-{% block form %}
-<div class="row mb-3">
-    <div class="col-md-12">
-        <table class="table table-borderless">
-            <tbody>
-                <tr>
-                    <td><label for="search-text">Texto:</label></td>
-                    <td><input type="text" class="form-control" id="search-text" placeholder="Buscar por texto"></td>
-                    <td><label for="search-user">Usuario:</label></td>
-                    <td><select class="form-control select2" id="search-user" style="width: 100%;">
-                            <option value="">Seleccionar Usuario</option>
-                        </select></td>
-                </tr>
-                <tr>
-                    <td><label for="search-product">Producto:</label></td>
-                    <td><select class="form-control select2" id="search-product" style="width: 100%;">
-                            <option value="">Seleccionar Producto</option>
-                        </select></td>
-                    <td><label for="search-status">Estado:</label></td>
-                    <td><select class="form-control" id="search-status" style="width: 100%;">
-                            <option value="">Seleccionar Estado</option>
-                            <option value="1">Activo</option>
-                            <option value="0">Inactivo</option>
-                        </select></td>
-                </tr>
-                <tr>
-                    <td><label for="search-start-date">Fecha Inicial:</label></td>
-                    <td><input type="date" class="form-control" id="search-start-date" placeholder="Fecha Inicial"></td>
-                    <td><label for="search-end-date">Fecha Final:</label></td>
-                    <td><input type="date" class="form-control" id="search-end-date" placeholder="Fecha Final"></td>
-                </tr>
-            </tbody>
-        </table>
+{% block head %}
+<meta name="csrf-token" content="{{ csrf_token }}">
+{% endblock %}
+
+{% block title %}
+Lista de Comentarios | Shop
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3 class="card-title">Lista de Comentarios</h3>
+                        <div class="ml-auto">
+                            <a href="{{ add_url_variable }}" class="btn btn-primary">Añadir Comentario</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% block form %}
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="search-text">Texto:</label>
+                            <input type="text" class="form-control" id="search-text" placeholder="Buscar por texto">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="search-user">Usuario:</label>
+                            <select class="form-control select2" id="search-user" style="width: 100%;">
+                                <option value="">Seleccionar Usuario</option>
+                                {% for user in users %}
+                                <option value="{{ user.id }}">{{ user.username }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="search-product">Producto:</label>
+                            <select class="form-control select2" id="search-product" style="width: 100%;">
+                                <option value="">Seleccionar Producto</option>
+                                {% for product in products %}
+                                <option value="{{ product.id }}">{{ product.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="search-status">Estado:</label>
+                            <select class="form-control" id="search-status" style="width: 100%;">
+                                <option value="">Seleccionar Estado</option>
+                                <option value="1">Activo</option>
+                                <option value="0">Inactivo</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="search-start-date">Fecha Inicial:</label>
+                            <input type="date" class="form-control" id="search-start-date" placeholder="Fecha Inicial">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="search-end-date">Fecha Final:</label>
+                            <input type="date" class="form-control" id="search-end-date" placeholder="Fecha Final">
+                        </div>
+                    </div>
+                    {% endblock %}
+
+                    {% block table %}
+                        {% include "shop/comment/table.html" %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-
-{% endblock %}
-
-{% block table %}
-<table class="table">
-    <thead>
-        <tr>
-            <th>Usuario</th>
-            <th>Producto</th>
-            <th>Texto</th>
-            <th>Creado</th>
-            <th>Actualizado</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for comment in comments %}
-        <tr>
-            <td>{{ comment.user }}</td>
-            <td>{{ comment.product }}</td>
-            <td>{{ comment.text }}</td>
-            <td>{{ comment.created_at }}</td>
-            <td>{{ comment.updated_at }}</td>
-            <td>
-                <a href="{% url 'edit_comment' comment.id %}" class="btn btn-primary">Editar</a>
-                <a href="{% url 'delete_comment' comment.id %}" class="btn btn-danger">Eliminar</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% endblock %}
-
-{% block scripts %}
-<script>
-    $(document).ready(function () {
-        $('#search-start-date, #search-end-date').on('change', function () {
-            var startDate = $('#search-start-date').val();
-            var endDate = $('#search-end-date').val();
-
-            if (!startDate) {
-                $('#search-start-date').attr('placeholder', 'Fecha Inicial');
-            }
-
-            if (!endDate) {
-                $('#search-end-date').attr('placeholder', 'Fecha Final');
-            }
-
-            // Resto del código de filtrado...
-        });
-    });
-    console.log('Hola');
-</script>
-<script>
-    $(document).ready(function () {
-        // Función para cargar dinámicamente la lista de usuarios utilizando Select2
-        function loadUsers() {
-            $.ajax({
-                url: '{% url "load_users" %}',
-                type: 'GET',
-                dataType: 'json',
-                success: function (data) {
-                    $('#search-user').empty();
-                    $('#search-user').append('<option value="">Seleccionar Usuario</option>');
-                    $.each(data.users, function (index, user) {
-                        $('#search-user').append('<option value="' + user.id + '">' + user.username + '</option>');
-                    });
-                    $('#search-user').select2();
-                }
-            });
-        }
-
-        // Función para cargar dinámicamente la lista de productos utilizando Select2
-        function loadProducts() {
-            $.ajax({
-                url: '{% url "load_products" %}',
-                type: 'GET',
-                dataType: 'json',
-                success: function (data) {
-                    $('#search-product').empty();
-                    $('#search-product').append('<option value="">Seleccionar Producto</option>');
-                    $.each(data.products, function (index, product) {
-                        $('#search-product').append('<option value="' + product.id + '">' + product.name + '</option>');
-                    });
-                    $('#search-product').select2();
-                }
-            });
-        }
-
-        // Cargar la lista de usuarios y productos al cargar la página
-        loadUsers();
-        loadProducts();
-
-        // Función para realizar la búsqueda cuando cambia un campo de búsqueda
-        function performSearch() {
-            var searchText = $('#search-text').val();
-            var userId = $('#search-user').val();
-            var productId = $('#search-product').val();
-            var status = $('#search-status').val();
-            var startDate = $('#search-start-date').val();
-            var endDate = $('#search-end-date').val();
-
-            $.ajax({
-                url: window.location.pathname,
-                type: 'GET',
-                data: {
-                    'search_text': searchText,
-                    'user_id': userId,
-                    'product_id': productId,
-                    'status': status,
-                    'start_date': startDate,
-                    'end_date': endDate
-                },
-                success: function (data) {
-                    $('#comment-list').html(data);
-                }
-            });
-        }
-
-        // Realizar la búsqueda cuando cambia un campo de búsqueda
-        $('#search-text, #search-user, #search-product, #search-status, #search-start-date, #search-end-date').on('input change', function () {
-            performSearch();
-        });
-    });
-</script>
 {% endblock %}

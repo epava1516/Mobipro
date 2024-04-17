@@ -1,5 +1,5 @@
-from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView, RedirectView
-from django.urls import reverse_lazy, reverse
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView, View
+from django.urls import reverse_lazy
 from shop.category.models import Category
 from django.template.loader import render_to_string
 from django.http import JsonResponse
@@ -42,16 +42,17 @@ class CategoryListView(ListView):
 class CategoryCreateView(CreateView):
     model = Category
     template_name = 'shop/category/form.html'
-    fields = '__all__'
+    fields = ['name', 'description']  # Especifica solo los campos que quieres utilizar
     success_url = reverse_lazy('shop_categories')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['list_url_variable'] = reverse_lazy('shop_categories')  # URL de la vista de agregar
+        context['list_url_variable'] = reverse_lazy('shop_categories')
         context['shop_title'] = 'Añadir Categoría'
         context['title'] = 'Category'
         context['action'] = 'Añadir'
         return context
+
 
 class CategoryDetailView(DetailView):
     model = Category
@@ -88,11 +89,13 @@ class CategoryDeleteView(DeleteView):
         context['title'] = 'Category'
         return context
 
-class CategoryActivateView(RedirectView):
-    permanent = False
-
-    def get_redirect_url(self, *args, **kwargs):
+class CategoryActivateView(View):
+    def post(self, request, *args, **kwargs):
         category = get_object_or_404(Category, pk=kwargs['pk'])
-        category.is_active = False
+        category.is_active = not category.is_active  # O simplemente False para desactivar siempre
         category.save()
-        return reverse('shop_categories')
+
+        # Aquí asumimos que quieres recargar la lista completa de categorías
+        categories = Category.objects.all()
+        html = render_to_string('shop/category/table.html', {'categories': categories}, request=request)
+        return JsonResponse({'html': html})

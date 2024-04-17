@@ -1,0 +1,29 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th>Usuario</th>
+            <th>Producto</th>
+            <th>Texto</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for comment in comments %}
+        <tr>
+            <td>{{ comment.user.username }}</td>
+            <td>{{ comment.product.name }}</td>
+            <td>{{ comment.text }}</td>
+            <td>{{ comment.is_active | yesno:"Activo,Inactivo" }}</td>
+            <td>
+                <a href="{% url 'comment_edit' comment.id %}" class="btn btn-sm btn-primary">Editar</a>
+                <button class="btn btn-sm {{ comment.is_active|yesno:'btn-danger,btn-success' }}"
+                    data-url="{% url 'comment_activate' comment.id %}"
+                    onclick="changeCommentStatus(this);">
+                    {{ comment.is_active|yesno:'Desactivar,Activar' }}
+                </button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
